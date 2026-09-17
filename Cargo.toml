@@ -1,0 +1,21 @@
+[package]
+name = "wda"
+version = "0.1.0"
+edition = "2021"
+license = "Apache-2.0"
+
+[lib]
+name = "wda_core"
+path = "src/lib.rs"
+
+[[bin]]
+name = "wda"
+path = "src/main.rs"
+
+[dependencies]
+jsonschema = { version = "0.51.0", default-features = false }
+json-sourcemap = "0.2.0"
+marked-yaml = "0.8.0"
+html5gum = "0.8.4"
+serde_json = "1.0"
+chrono = { version = "0.4", default-features = false, features = ["clock"] }
