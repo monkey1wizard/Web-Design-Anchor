@@ -1,0 +1,548 @@
+# WDA Release Workflow
+#
+# Trigger: push of a stable version tag or prerelease tag (v*).
+# Produces: cross-platform wda binaries and fallback archives.
+
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+      - 'v[0-9]+.[0-9]+.[0-9]+-*'
+
+# Restrict default permissions to read-only; elevate only where needed.
+permissions:
+  contents: write
+  id-token: none
+
+jobs:
+  # Build the six supported release targets.
+  build:
+    name: Build ${{ matrix.target }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: x86_64-pc-windows-msvc
+            os: windows-latest
+            platform: windows
+            arch: x64
+            binary_ext: .exe
+            archive_ext: .zip
+          - target: aarch64-pc-windows-msvc
+            os: windows-latest
+            platform: windows
+            arch: arm64
+            binary_ext: .exe
+            archive_ext: .zip
+          - target: x86_64-apple-darwin
+            os: macos-latest
+            platform: darwin
+            arch: x64
+            binary_ext: ""
+            archive_ext: .tar.gz
+          - target: aarch64-apple-darwin
+            os: macos-latest
+            platform: darwin
+            arch: arm64
+            binary_ext: ""
+            archive_ext: .tar.gz
+          - target: x86_64-unknown-linux-musl
+            os: ubuntu-latest
+            platform: linux
+            arch: x64
+            binary_ext: ""
+            archive_ext: .tar.gz
+          - target: aarch64-unknown-linux-musl
+            os: ubuntu-latest
+            platform: linux
+            arch: arm64
+            binary_ext: ""
+            archive_ext: .tar.gz
+
+    steps:
+      - name: Disable automatic line-ending conversion
+        shell: bash
+        run: git config --global core.autocrlf false
+
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.target }}
+
+      - name: Install cross (musl targets)
+        if: contains(matrix.target, 'musl')
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cross
+
+      - name: Build binary (native)
+        if: "!contains(matrix.target, 'musl')"
+        env:
+          RUSTFLAGS: ${{ matrix.platform == 'windows' && '-C target-feature=+crt-static' || '' }}
+        run: cargo build --release --target ${{ matrix.target }} -p wda --locked
+
+      - name: Build binary (cross/musl)
+        if: contains(matrix.target, 'musl')
+        run: cross build --release --target ${{ matrix.target }} -p wda --locked
+
+      - name: Prepare canonical asset name
+        shell: bash
+        env:
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          VERSION="$REF_NAME"
+          BINARY_NAME="wda-${VERSION}-${{ matrix.platform }}-${{ matrix.arch }}${{ matrix.binary_ext }}"
+          ARCHIVE_NAME="wda-${VERSION}-${{ matrix.platform }}-${{ matrix.arch }}${{ matrix.archive_ext }}"
+          echo "BINARY_NAME=${BINARY_NAME}" >> "$GITHUB_ENV"
+          echo "ARCHIVE_NAME=${ARCHIVE_NAME}" >> "$GITHUB_ENV"
+
+      - name: Copy and rename binary
+        shell: bash
+        run: |
+          SRC="target/${{ matrix.target }}/release/wda${{ matrix.binary_ext }}"
+          cp "${SRC}" "${BINARY_NAME}"
+
+      - name: Assert static CRT - no dynamic CRT imports (Windows)
+        if: matrix.platform == 'windows'
+        shell: pwsh
+        run: |
+          $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+          $vs = & $vswhere -latest -property installationPath
+          $dumpbin = Get-ChildItem "$vs\VC\Tools\MSVC\*\bin\Host*\*\dumpbin.exe" | Select-Object -First 1
+          if (-not $dumpbin) { Write-Error "dumpbin not found"; exit 1 }
+          $imports = & $dumpbin.FullName /imports "$env:BINARY_NAME"
+          $bad = $imports | Select-String -Pattern 'VCRUNTIME140|api-ms-win-crt'
+          if ($bad) {
+            Write-Error "Dynamic CRT import found in $env:BINARY_NAME"
+            $bad
+            exit 1
+          }
+          Write-Host "Static CRT OK: no VCRUNTIME140 / api-ms-win-crt imports in $env:BINARY_NAME"
+
+      - name: Stage end-user package (flat layout)
+        shell: bash
+        run: |
+          rm -rf pkg
+          mkdir -p pkg/skills
+          cp "${BINARY_NAME}" "pkg/wda${{ matrix.binary_ext }}"
+          cp -r skills/wda pkg/skills/
+          cp plugin.json LICENSE NOTICE README.md pkg/
+
+      - name: Create package archive (zip - Windows)
+        if: matrix.archive_ext == '.zip'
+        shell: pwsh
+        run: Compress-Archive -Path "pkg/*" -DestinationPath $env:ARCHIVE_NAME
+
+      - name: Create package archive (tar.gz - Unix)
+        if: matrix.archive_ext == '.tar.gz'
+        shell: bash
+        run: tar -czf "${ARCHIVE_NAME}" -C pkg .
+
+      - name: Upload binary artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: binary-${{ matrix.platform }}-${{ matrix.arch }}
+          path: ${{ env.BINARY_NAME }}
+          if-no-files-found: error
+
+      - name: Upload archive artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: archive-${{ matrix.platform }}-${{ matrix.arch }}
+          path: ${{ env.ARCHIVE_NAME }}
+          if-no-files-found: error
+
+  # Assemble the release, sign its checksums, and publish the GitHub Release.
+  sign:
+    name: Assemble, sign, and publish
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Preflight - release tag matches crate version
+        shell: bash
+        env:
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          TAG="$REF_NAME"
+          BARE="${TAG#v}"
+          CORE="${BARE%%-*}"
+          METADATA="$(cargo metadata --locked --format-version 1)"
+          CRATE_VERSION="$(printf '%s' "$METADATA" | python3 -c 'import json, sys; print(next(package["version"] for package in json.load(sys.stdin)["packages"] if package["name"] == "wda"))')"
+          if [ "$CORE" != "$CRATE_VERSION" ]; then
+            echo "release tag ${TAG} (core ${CORE}) does not match Cargo.toml version ${CRATE_VERSION}" >&2
+            exit 1
+          fi
+          echo "preflight OK: tag ${TAG} (core ${CORE}) matches Cargo.toml version ${CRATE_VERSION}"
+
+      - name: Extract stable changelog section
+        if: ${{ !contains(github.ref_name, '-') }}
+        shell: bash
+        env:
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          BARE="${REF_NAME#v}"
+          CORE="${BARE%%-*}"
+          bash packaging/changelog-section.sh "$CORE" CHANGELOG.md release-body.md
+
+      - name: Download all build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: assets/
+
+      - name: Flatten release assets
+        shell: bash
+        run: |
+          find assets/ -type f -name 'wda-*' -exec mv {} ./ \;
+          asset_count="$(find . -maxdepth 1 -type f -name 'wda-*' | wc -l)"
+          if [ "$asset_count" -ne 12 ]; then
+            echo "expected exactly twelve wda- assets, found ${asset_count}" >&2
+            exit 1
+          fi
+
+      - name: Generate checksums and package-manager manifests
+        shell: bash
+        env:
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          sha256sum wda-* > checksums.txt
+          # GAL's artifact-manifest.json is intentionally omitted: WDA has no consumer for it.
+          bash packaging/render-manifests.sh "$REF_NAME" checksums.txt release-out
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@v3
+
+      - name: Sign checksums.txt
+        run: |
+          cosign sign-blob checksums.txt \
+            --yes \
+            --output-signature checksums.txt.sig \
+            --output-certificate checksums.txt.pem
+
+      - name: Upload package-manager manifests
+        uses: actions/upload-artifact@v4
+        with:
+          name: package-manager-manifests
+          path: release-out/
+          if-no-files-found: error
+
+      - name: Create GitHub Release (stable)
+        if: ${{ !contains(github.ref_name, '-') }}
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: WDA ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+          body_path: release-body.md
+          generate_release_notes: false
+          files: |
+            wda-*
+            checksums.txt
+            checksums.txt.sig
+            checksums.txt.pem
+            packaging/install.sh
+            packaging/install.ps1
+
+      - name: Create GitHub Release (prerelease)
+        if: ${{ contains(github.ref_name, '-') }}
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: WDA ${{ github.ref_name }}
+          draft: false
+          prerelease: true
+          generate_release_notes: true
+          files: |
+            wda-*
+            checksums.txt
+            checksums.txt.sig
+            checksums.txt.pem
+            packaging/install.sh
+            packaging/install.ps1
+
+  # Publish the Homebrew formula only for stable releases, after a local audit.
+  publish-homebrew:
+    name: Publish Homebrew formula (audited)
+    needs: sign
+    if: ${{ !contains(github.ref_name, '-') }}
+    runs-on: macos-latest
+    env:
+      HOMEBREW_TAP_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+    steps:
+      - name: Download package-manager manifests
+        uses: actions/download-artifact@v4
+        with:
+          name: package-manager-manifests
+          path: release-out/
+
+      - name: Homebrew tap push gate status
+        shell: bash
+        run: |
+          if [ -z "${HOMEBREW_TAP_TOKEN}" ]; then
+            echo "Homebrew tap push SKIPPED: HOMEBREW_TAP_TOKEN secret not set"
+          else
+            echo "Homebrew tap push WILL RUN, pending the audit gate below"
+          fi
+
+      - name: brew audit --strict (local formula, pre-push)
+        if: ${{ env.HOMEBREW_TAP_TOKEN != '' }}
+        shell: bash
+        env:
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          VERSION="$REF_NAME"
+          mkdir -p /tmp/local-tap/Formula
+          cp "release-out/wda-${VERSION}.rb" /tmp/local-tap/Formula/wda.rb
+          git -C /tmp/local-tap init -q
+          git -C /tmp/local-tap -c user.email=ci@local -c user.name=ci add -A
+          git -C /tmp/local-tap -c user.email=ci@local -c user.name=ci commit -q -m preflight
+          brew tap monkey1wizard/local-preflight "file:///tmp/local-tap"
+          brew audit --strict monkey1wizard/local-preflight/wda
+
+      - name: Push Homebrew formula to tap
+        if: ${{ env.HOMEBREW_TAP_TOKEN != '' }}
+        shell: bash
+        env:
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          VERSION="$REF_NAME"
+          git clone --depth 1 \
+            "https://x-access-token:${HOMEBREW_TAP_TOKEN}@github.com/monkey1wizard/homebrew-tap.git" \
+            homebrew-tap
+          mkdir -p homebrew-tap/Formula
+          cp "release-out/wda-${VERSION}.rb" homebrew-tap/Formula/wda.rb
+          cd homebrew-tap
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add Formula/wda.rb
+          git diff --cached --quiet && exit 0
+          git commit -m "chore(formula): update wda to ${VERSION}"
+          git push
+
+  # Verify the formula against the live tap after publication.
+  smoke-homebrew:
+    name: Smoke — Homebrew (macOS)
+    needs: publish-homebrew
+    if: ${{ !contains(github.ref_name, '-') }}
+    runs-on: macos-latest
+    steps:
+      - name: brew tap
+        run: brew tap monkey1wizard/tap
+      - name: brew audit (strict)
+        run: brew audit --strict monkey1wizard/tap/wda
+      - name: brew install
+        run: brew install monkey1wizard/tap/wda
+      - name: brew test
+        run: brew test wda
+      - name: Verify installed version
+        run: wda --version
+
+  # Validate every manifest and submit only stable releases to WinGet.
+  submit-winget:
+    name: Validate and submit WinGet manifests
+    needs: sign
+    runs-on: windows-latest
+    permissions:
+      contents: read
+    env:
+      WINGET_CREATE_GITHUB_TOKEN: ${{ secrets.WINGET_CREATE_GITHUB_TOKEN }}
+    steps:
+      - name: Download package-manager manifests
+        uses: actions/download-artifact@v4
+        with:
+          name: package-manager-manifests
+          path: release-out/
+
+      - name: Resolve manifest directory
+        shell: pwsh
+        env:
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          $version = $env:REF_NAME.TrimStart('v')
+          $manifestDir = Join-Path 'release-out/manifests/m/Monkey1Wizard/WDA' $version
+          if (-not (Test-Path -LiteralPath $manifestDir -PathType Container)) {
+            throw "WinGet manifest directory not found: $manifestDir"
+          }
+          "MANIFEST_DIR=$manifestDir" >> $env:GITHUB_ENV
+          "MANIFEST_VERSION=$version" >> $env:GITHUB_ENV
+
+      - name: Install wingetcreate
+        shell: pwsh
+        run: |
+          Invoke-WebRequest -Uri 'https://aka.ms/wingetcreate/latest' -OutFile "$env:RUNNER_TEMP/wingetcreate.exe"
+          "$env:RUNNER_TEMP" >> $env:GITHUB_PATH
+
+      - name: WinGet preflight
+        shell: pwsh
+        run: |
+          winget --version
+          wingetcreate --version
+          Get-ChildItem -LiteralPath $env:MANIFEST_DIR -Filter '*.yaml' -File | ForEach-Object {
+            if ($_.Name -notmatch '^Monkey1Wizard\.WDA(\.installer|\.locale\.[A-Za-z0-9-]+)?\.yaml$') {
+              throw "Unexpected WinGet manifest: $($_.FullName)"
+            }
+          }
+
+      - name: winget validate
+        shell: pwsh
+        run: winget validate --manifest "$env:MANIFEST_DIR"
+
+      - name: WinGet submit gate status
+        shell: pwsh
+        env:
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          if ($env:REF_NAME.Contains('-')) {
+            Write-Host "WinGet submit SKIPPED: prerelease tag $env:REF_NAME"
+          } elseif ([string]::IsNullOrEmpty($env:WINGET_CREATE_GITHUB_TOKEN)) {
+            Write-Host 'WinGet submit WILL FAIL: WINGET_CREATE_GITHUB_TOKEN secret not set'
+          } else {
+            Write-Host "WinGet submit WILL RUN for stable tag $env:REF_NAME"
+          }
+
+      - name: Fail stable release without WinGet token
+        if: ${{ !contains(github.ref_name, '-') && env.WINGET_CREATE_GITHUB_TOKEN == '' }}
+        shell: pwsh
+        run: throw 'WINGET_CREATE_GITHUB_TOKEN is required for stable WinGet submission'
+
+      - name: Submit stable release to WinGet
+        if: ${{ !contains(github.ref_name, '-') }}
+        shell: pwsh
+        env:
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          wingetcreate submit `
+            --prtitle "WDA $env:REF_NAME" `
+            --token "$env:WINGET_CREATE_GITHUB_TOKEN" `
+            "$env:MANIFEST_DIR"
+
+  # Verify release assets, Cargo installation, and both installer scripts.
+  smoke-artifacts:
+    name: Smoke - artifacts (checksum + cosign)
+    needs: sign
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Download release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REF_NAME: ${{ github.ref_name }}
+        run: gh release download "$REF_NAME" --repo "${{ github.repository }}" --pattern "wda-*" --pattern "checksums.txt*"
+      - name: Verify SHA-256
+        run: sha256sum -c checksums.txt
+      - name: Install cosign
+        uses: sigstore/cosign-installer@v3
+      - name: Verify checksums signature
+        run: |
+          cosign verify-blob checksums.txt \
+            --signature checksums.txt.sig \
+            --certificate checksums.txt.pem \
+            --certificate-identity-regexp '(?i)https://github.com/monkey1wizard/web-design-anchor/\.github/workflows/release\.yml@.*' \
+            --certificate-oidc-issuer 'https://token.actions.githubusercontent.com'
+
+  smoke-cargo:
+    name: Smoke - Cargo (${{ matrix.os }})
+    needs: sign
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+      - name: Install Deno
+        uses: denoland/setup-deno@v2
+      - name: Install from public repo (fresh CARGO_HOME)
+        shell: bash
+        env:
+          CARGO_HOME: ${{ runner.temp }}/cargohome
+        run: |
+          cargo install --git "https://github.com/${{ github.repository }}" wda --locked
+          echo "${CARGO_HOME}/bin" >> "$GITHUB_PATH"
+      - name: Verify version and project lifecycle
+        shell: bash
+        env:
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          BARE="${REF_NAME#v}"
+          CORE="${BARE%%-*}"
+          EXPECTED="wda ${CORE}"
+          ACTUAL="$(wda --version)"
+          if [ "$ACTUAL" != "$EXPECTED" ]; then
+            echo "version mismatch: expected '$EXPECTED', got '$ACTUAL'" >&2
+            exit 1
+          fi
+          TMP="$(mktemp -d)"
+          cd "$TMP"
+          wda init
+          wda check
+          wda build
+
+  smoke-installer:
+    name: Smoke - installer (${{ matrix.os }})
+    needs: sign
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Run install.sh against the release tag
+        shell: bash
+        env:
+          WDA_VERSION: ${{ github.ref_name }}
+        run: |
+          curl -fsSL "https://raw.githubusercontent.com/${{ github.repository }}/$WDA_VERSION/packaging/install.sh" | bash
+          echo "${HOME}/.local/bin" >> "$GITHUB_PATH"
+      - name: Verify installed version
+        shell: bash
+        env:
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          BARE="${REF_NAME#v}"
+          CORE="${BARE%%-*}"
+          EXPECTED="wda ${CORE}"
+          ACTUAL="$(wda --version)"
+          if [ "$ACTUAL" != "$EXPECTED" ]; then
+            echo "version mismatch: expected '$EXPECTED', got '$ACTUAL'" >&2
+            exit 1
+          fi
+
+  smoke-installer-windows:
+    name: Smoke - installer (windows)
+    needs: sign
+    runs-on: windows-latest
+    steps:
+      - name: Run install.ps1 against the release tag
+        shell: pwsh
+        env:
+          WDA_VERSION: ${{ github.ref_name }}
+        run: |
+          irm "https://raw.githubusercontent.com/${{ github.repository }}/$env:WDA_VERSION/packaging/install.ps1" | iex
+          echo "$env:LOCALAPPDATA\Programs\wda" >> $env:GITHUB_PATH
+      - name: Verify installed version
+        shell: pwsh
+        env:
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          $bare = $env:REF_NAME.TrimStart('v')
+          $core = $bare.Split('-')[0]
+          $expected = "wda $core"
+          $actual = (& wda.exe --version).Trim()
+          if ($actual -ne $expected) {
+            throw "version mismatch: expected '$expected', got '$actual'"
+          }

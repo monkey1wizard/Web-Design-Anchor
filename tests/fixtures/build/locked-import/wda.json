@@ -1,0 +1,12 @@
+{
+  "accessibilityBaseline": "wcag-2.2-aa",
+  "browserBaseline": "baseline-widely-available",
+  "designSystem": {
+    "name": "default",
+    "version": "1.0.0"
+  },
+  "pageArchitecture": "mpa",
+  "projectName": "build-locked-import",
+  "projectVersion": "1.0.0",
+  "wdaVersion": "0.1.0"
+}
