@@ -1,0 +1,26 @@
+Web Design Anchor
+Copyright the Web Design Anchor contributors.
+
+This product bundles a snapshot of design token values derived from a
+third-party package licensed under the Apache License, Version 2.0.
+Reproduced here in accordance with Apache License, Version 2.0 Section 4(d).
+
+  Upstream package: @adobe/spectrum-tokens
+  Snapshot version: 15.2.0 (exact, taken from the npm registry `dist-tags.latest`)
+  Upstream license: Apache License, Version 2.0
+    https://www.apache.org/licenses/LICENSE-2.0
+
+The values embedded in `src/builtins/wda_minimal/tokens/tokens.json` and
+`src/builtins/wda_minimal/pages/index.html` are a one-time snapshot of
+@adobe/spectrum-tokens 15.2.0 defaults, taken at implementation time. They
+have been modified from the upstream source: remapped from Spectrum's
+vendor token identifiers onto Web Design Anchor's own project-scoped
+semantic key paths (for example `color.brand.primary`, `spacing.md`), and
+the font family tokens have been changed to a Noto-first font stack. The
+upstream package is not vendored, redistributed, or referenced as a
+runtime or build-time dependency; only the resulting numeric and string
+values are reused.
+
+This snapshot is frozen and does not track upstream releases. A future
+refresh is a deliberate action that re-reads @adobe/spectrum-tokens at a
+newly chosen version and updates this NOTICE to record that version.
