@@ -1,0 +1,6 @@
+---
+title: Architecture
+status: active
+updated: 2026-09-04
+---
+# Architecture

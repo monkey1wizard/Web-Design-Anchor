@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    name: cargo test
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Verify Deno
+        run: deno --version
+      - name: Verify Git
+        run: git --version
+      - name: Configure git identity
+        run: |
+          git config --global user.name "WDA CI"
+          git config --global user.email "wda-ci@localhost"
+      - name: Run cargo test
+        run: cargo test
+
+  # Owner ruling, 2026-09-05: this job is non-blocking. It calls the real
+  # npm registry through the real `deno` binary, so a registry outage or
+  # transient network flake fails the job for reasons the merge has no
+  # control over. Blocking the merge gate on it would move the flake from
+  # the test suite (the thing this plan removes it from) onto the gate
+  # itself, not remove it. GitHub Actions has no per-job `allow_failure`
+  # flag, so this job's non-blocking status is a branch-protection setting
+  # (leave this job unselected as a required status check) rather than
+  # something the file itself can declare.
+  ignored-probes:
+    name: cargo test -- --ignored
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Verify Deno
+        run: deno --version
+      - name: Run cargo test -- --ignored
+        run: cargo test -- --ignored

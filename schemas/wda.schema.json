@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "WDA Project Contract Schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "projectName",
+    "projectVersion",
+    "wdaVersion",
+    "pageArchitecture",
+    "browserBaseline",
+    "accessibilityBaseline",
+    "designSystem"
+  ],
+  "properties": {
+    "projectName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "projectVersion": {
+      "type": "string",
+      "minLength": 1
+    },
+    "wdaVersion": {
+      "type": "string",
+      "minLength": 1
+    },
+    "pageArchitecture": {
+      "type": "string",
+      "enum": [
+        "mpa",
+        "spa"
+      ]
+    },
+    "browserBaseline": {
+      "type": "string",
+      "enum": [
+        "baseline-widely-available"
+      ]
+    },
+    "accessibilityBaseline": {
+      "type": "string",
+      "enum": [
+        "wcag-2.2-aa"
+      ]
+    },
+    "designSystem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "version"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}
