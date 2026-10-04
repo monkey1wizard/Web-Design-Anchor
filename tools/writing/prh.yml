@@ -1,0 +1,23 @@
+version: 1
+rules:
+  # Evidence: docs/glossary.md writes 儲存庫（Repository）.
+  - expected: 儲存庫
+    patterns:
+      - 倉庫
+    specs:
+      - from: 倉庫
+        to: 儲存庫
+  # Evidence: docs/glossary.md Skill row writes 發布.
+  - expected: 發布
+    patterns:
+      - 發佈
+    specs:
+      - from: 發佈
+        to: 發布
+  # Evidence: repository usage counts are Design System 69 versus 設計系統 2.
+  - expected: Design System
+    patterns:
+      - 設計系統
+    specs:
+      - from: 設計系統
+        to: Design System
