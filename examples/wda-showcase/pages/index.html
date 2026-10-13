@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    (function () {
+      var root = document.documentElement;
+      root.setAttribute("data-js", "");
+      try {
+        var mode = localStorage.getItem("wda-showcase-color-mode");
+        if (mode === "light" || mode === "dark") root.setAttribute("data-theme", mode);
+      } catch (error) {}
+    })();
+  </script>
+  <title>Web Design Anchor｜與 AI 對話，建立標準 Web 網站</title>
+  <meta name="description" content="Web Design Anchor（WDA）是專為建立「最小 Web」而生的 CLI 工具。與 AI 對話，以 HTML5、Modern CSS 與 TypeScript 建立網站，輸出純靜態的 dist/。">
+  <link rel="stylesheet" href="styles/tokens.css">
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+  <header class="top-bar">
+    <div class="container top-bar__inner">
+      <details class="lang-switch">
+        <summary class="utility-button utility-button--icon">
+          <svg class="utility-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="7.25"/><ellipse cx="10" cy="10" rx="3" ry="7.25"/><path d="M2.75 10h14.5M4.2 6.25c3.4 1.3 7.2 1.3 11.6 0M4.2 13.75c3.4-1.3 7.2-1.3 11.6 0"/></svg>
+          <span class="visually-hidden">語言：繁體中文</span>
+        </summary>
+        <ul class="lang-switch__menu">
+          <li><a class="lang-switch__item" href="index.html" hreflang="zh-TW" lang="zh-TW" aria-current="true">
+            <span>繁體中文</span>
+            <svg class="utility-icon lang-switch__check" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></svg>
+          </a></li>
+        </ul>
+      </details>
+      <fieldset class="color-mode">
+        <legend class="visually-hidden">色彩模式</legend>
+        <label class="color-mode__option">
+          <input class="visually-hidden" type="radio" name="color-mode" value="light">
+          <svg class="utility-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="3.25"/><path d="M10 2.5v1.75M10 15.75v1.75M2.5 10h1.75M15.75 10h1.75M4.7 4.7l1.24 1.24M14.06 14.06l1.24 1.24M4.7 15.3l1.24-1.24M14.06 5.94l1.24-1.24"/></svg>
+          <span class="visually-hidden">淺色</span>
+          <span class="color-mode__tip" aria-hidden="true">淺色</span>
+        </label>
+        <label class="color-mode__option">
+          <input class="visually-hidden" type="radio" name="color-mode" value="dark">
+          <svg class="utility-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M16.5 12.2A6.75 6.75 0 0 1 7.8 3.5a6.75 6.75 0 1 0 8.7 8.7z"/></svg>
+          <span class="visually-hidden">深色</span>
+          <span class="color-mode__tip" aria-hidden="true">深色</span>
+        </label>
+        <label class="color-mode__option">
+          <input class="visually-hidden" type="radio" name="color-mode" value="system" checked>
+          <svg class="utility-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="2.75" y="3.75" width="14.5" height="10" rx="1.5"/><path d="M7 17.25h6M10 13.75v3.5"/></svg>
+          <span class="visually-hidden">跟隨系統</span>
+          <span class="color-mode__tip" aria-hidden="true">跟隨系統</span>
+        </label>
+      </fieldset>
+      <a class="utility-button utility-button--icon" href="https://github.com/monkey1wizard/Web-Design-Anchor">
+        <svg class="utility-icon utility-icon--solid" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></svg>
+        <span class="visually-hidden">GitHub 上的 WDA 原始碼</span>
+      </a>
+    </div>
+  </header>
+
+  <sp-theme system="spectrum-two" scale="medium">
+    <script>
+      (function () {
+        var theme = document.currentScript.parentElement;
+        try {
+          var mode = document.documentElement.getAttribute("data-theme");
+          if (mode !== "light" && mode !== "dark") {
+            mode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+          }
+          theme.setAttribute("color", mode);
+        } catch (error) {
+          theme.setAttribute("color", "light");
+        }
+      })();
+    </script>
+    <main id="top">
+      <section class="intro" aria-labelledby="hero-title">
+        <div class="container">
+          <h1 class="intro__title" id="hero-title">Web Design Anchor</h1>
+          <p class="intro__sub">與 AI 對話建立網站，帶走的是純靜態、零依賴的 <code>dist/</code>。</p>
+          <ol class="strip" aria-label="從一句話到 dist/ 的四個步驟">
+            <li class="strip__step">
+              <p class="strip__title"><span class="strip__num" aria-hidden="true">1</span>你說</p>
+              <p class="strip__quote">把標題放大，深色模式也要好讀</p>
+              <p class="strip__note">範例</p>
+            </li>
+            <li class="strip__step">
+              <p class="strip__title"><span class="strip__num" aria-hidden="true">2</span>AI 改檔案</p>
+              <p class="strip__paths"><span>styles/main.css</span><span>tokens/tokens.json</span></p>
+            </li>
+            <li class="strip__step">
+              <p class="strip__title"><span class="strip__num" aria-hidden="true">3</span><code class="strip__cmd">wda build</code></p>
+              <pre class="strip__term">Build succeeded.
+Output: &lt;project&gt;/dist
+HTTP server required; opening via file:// will not work.</pre>
+              <p class="strip__note">結束碼 0。完整輸出見下方</p>
+            </li>
+            <li class="strip__step strip__step--take">
+              <p class="strip__title"><span class="strip__num" aria-hidden="true">4</span>你帶走</p>
+              <ul class="strip__files" aria-label="dist/ 的內容">
+                <li>index.html</li>
+                <li>styles/</li>
+                <li>scripts/</li>
+                <li>assets/</li>
+              </ul>
+              <a class="strip__link" href="#install">安裝 WDA</a>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="step" id="step-1" aria-labelledby="step-1-title">
+        <div class="container step__inner">
+          <div class="step__head">
+            <h2 class="step__title" id="step-1-title"><span class="step__num"><span class="visually-hidden">步驟 </span>1</span><span class="step__title-text">你說一句話</span></h2>
+            <p class="step__lead"><strong>範例：</strong>下面的對話是示範，不是實際的聊天紀錄。Designer 用日常的話提出要求。</p>
+          </div>
+          <ol class="talk" aria-label="範例對話">
+            <li class="talk__turn talk__turn--you">
+              <p class="talk__who">Designer</p>
+              <p class="talk__say">把標題放大，深色模式也要好讀</p>
+            </li>
+            <li class="talk__turn talk__turn--ai">
+              <p class="talk__who">AI</p>
+              <p class="talk__say">我先讀了 <code>docs/design.md</code> 的規則，再改了 <code>styles/main.css</code> 和 <code>tokens/tokens.json</code>：標題字級放大，深色模式的文字色改用對應的 token。改完執行了 <code>wda build</code>，建置通過。</p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="step" id="step-2" aria-labelledby="step-2-title">
+        <div class="container step__inner">
+          <div class="step__head">
+            <h2 class="step__title" id="step-2-title"><span class="step__num"><span class="visually-hidden">步驟 </span>2</span><span class="step__title-text">AI 改的是專案檔案</span></h2>
+            <p class="step__lead">這個頁面的 source 就是下面這棵專案樹。設計規則、token 和頁面都是檔案，不留在聊天紀錄裡。<code>wda.json</code>、<code>README.md</code> 和 <code>docs/</code> 不會進入 <code>dist/</code>。</p>
+          </div>
+          <ul class="tree" aria-label="專案檔案樹">
+            <li class="tree__row"><code class="tree__path">wda.json</code><span class="tree__role">專案契約的核心：專案識別、技術基準與使用的 Design System</span></li>
+            <li class="tree__row"><code class="tree__path">README.md</code><span class="tree__role">專案說明</span></li>
+            <li class="tree__row"><code class="tree__path">docs/</code><span class="tree__role">專案文件：<code>architecture.md</code>、<code>design.md</code>、<code>naming.md</code></span></li>
+            <li class="tree__row"><code class="tree__path">pages/</code><span class="tree__role">頁面進入點，<code>pages/index.html</code> 建置為 <code>dist/index.html</code></span></li>
+            <li class="tree__row"><code class="tree__path">styles/</code><span class="tree__role">共用的 source 樣式表，直接對應到 <code>dist/styles/</code></span></li>
+            <li class="tree__row"><code class="tree__path">scripts/</code><span class="tree__role">TypeScript 互動模組，先型別檢查，再轉譯為 <code>dist/scripts/</code> 的 JavaScript</span></li>
+            <li class="tree__row"><code class="tree__path">tokens/</code><span class="tree__role"><code>tokens.json</code>，建置時轉譯為 <code>dist/styles/tokens.css</code></span></li>
+            <li class="tree__row"><code class="tree__path">assets/</code><span class="tree__role">專案自備的圖片、字型與圖示，只複製頁面實際參照的檔案</span></li>
+            <li class="tree__row"><code class="tree__path">deno.jsonc</code><span class="tree__role">唯一的專案相依宣告檔</span></li>
+            <li class="tree__row"><code class="tree__path">deno.lock</code><span class="tree__role">鎖定檔，與 <code>deno.jsonc</code> 共同管理外部相依</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="step" id="step-3" aria-labelledby="step-3-title">
+        <div class="container step__inner">
+          <div class="step__head">
+            <h2 class="step__title" id="step-3-title"><span class="step__num"><span class="visually-hidden">步驟 </span>3</span><span class="step__title-text">wda build <span class="step__title-keep">印出的全部內容</span></span></h2>
+            <p class="step__lead">這是在這個專案資料夾執行 <code>wda build</code> 的完整輸出，沒有刪減。</p>
+            <p class="step__note">WDA 一共只有四個指令：<code>wda init</code> 建立新專案與本機 Git 儲存庫，<code>wda deps</code> 管理 dependency graph，<code>wda check</code> 只驗證、不產出，<code>wda build</code> 驗證通過後建置輸出 <code>dist/</code>。</p>
+          </div>
+          <div class="step__body">
+            <pre class="term" aria-label="wda build 的終端機輸出"><code>$ wda build
+Build succeeded.
+Output: &lt;project&gt;/dist
+HTTP server required; opening via file:// will not work.</code></pre>
+            <p class="step__note">結束碼 0。實際輸出的是本機的絕對路徑，這裡已正規化為 <code>&lt;project&gt;/dist</code>。執行檔由這個儲存庫建置，擷取日期 2026-10-13。</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="step" id="step-4" aria-labelledby="step-4-title">
+        <div class="container step__inner">
+          <div class="step__head">
+            <h2 class="step__title" id="step-4-title"><span class="step__num"><span class="visually-hidden">步驟 </span>4</span><span class="step__title-text">你帶走 dist/</span></h2>
+            <p class="step__lead"><code>dist/</code> 是唯一的部署產物，沒有 WDA 也能獨立運作。<code>scripts/main.js</code> 打包了 Spectrum 元件，是其中最大的檔案。</p>
+            <p class="step__note">大小取自最終執行 <code>wda build</code> 產生的 <code>dist/</code>，以 KiB 四捨五入到整數，量測日期 2026-10-13。</p>
+          </div>
+          <div class="step__body">
+            <table class="sizes">
+              <caption class="visually-hidden"><code>dist/</code> 的檔案與大小</caption>
+              <thead>
+                <tr><th scope="col">檔案</th><th scope="col" class="sizes__size">大小</th></tr>
+              </thead>
+              <tbody>
+                <tr><th scope="row"><code>index.html</code></th><td class="sizes__size">不列：它自己的內容會改變大小</td></tr>
+                <tr><th scope="row"><code>styles/main.css</code></th><td class="sizes__size">21 KiB</td></tr>
+                <tr><th scope="row"><code>styles/tokens.css</code></th><td class="sizes__size">2 KiB</td></tr>
+                <tr><th scope="row"><code>scripts/main.js</code></th><td class="sizes__size">408 KiB</td></tr>
+                <tr><th scope="row"><code>assets/images/</code></th><td class="sizes__size">71 KiB</td></tr>
+              </tbody>
+            </table>
+            <figure class="shot">
+              <img class="shot__image" src="assets/images/page-first-viewport.png" width="1280" height="800" loading="lazy" alt="這個頁面建置後的首屏截圖：大標題 Web Design Anchor、副標題，以及從「你說」到「你帶走」的四格流程。">
+              <figcaption class="step__note">打開 <code>dist/index.html</code> 就是這個畫面。截圖以 headless Chrome 在 1280×800、淺色模式下開啟建置後的 <code>dist/index.html</code> 擷取，頁面內容為 commit <code>d71234c</code>，日期 2026-10-13。</figcaption>
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section class="install" id="install" aria-labelledby="install-title">
+        <div class="container step__inner">
+          <div class="step__head">
+            <h2 class="step__title" id="install-title"><span class="step__title-text">安裝 WDA</span></h2>
+            <p class="step__lead">先在 PATH 中備好 Git 與 Deno。WDA 不需要 Node.js。選一條路徑安裝，目前穩定版是 <code>v0.1.0</code>。</p>
+          </div>
+          <dl class="routes">
+            <div class="routes__row">
+              <dt>Homebrew</dt>
+              <dd><pre class="cmd"><code>brew install monkey1wizard/tap/wda</code></pre></dd>
+            </div>
+            <div class="routes__row">
+              <dt>WinGet</dt>
+              <dd><pre class="cmd"><code>winget install Monkey1Wizard.WDA</code></pre></dd>
+            </div>
+            <div class="routes__row">
+              <dt>Cargo</dt>
+              <dd><pre class="cmd"><code>cargo install --git https://github.com/monkey1wizard/Web-Design-Anchor --tag v0.1.0 wda --locked</code></pre></dd>
+            </div>
+            <div class="routes__row">
+              <dt>Releases</dt>
+              <dd>
+                <p>到 <a href="https://github.com/monkey1wizard/Web-Design-Anchor/releases">GitHub Releases</a> 下載符合平台的資產，再用安裝程式：Linux 與 macOS 用 <code>packaging/install.sh</code>，Windows 用 <code>packaging/install.ps1</code>。安裝程式會驗證 SHA-256 checksum。</p>
+              </dd>
+            </div>
+            <div class="routes__row">
+              <dt>檢查</dt>
+              <dd><pre class="cmd"><code>wda --version</code></pre></dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+
+      <section class="closing" aria-label="結語">
+        <div class="container">
+          <p class="closing__text">你帶走的是純靜態、零依賴的 <code>dist/</code>，歸你保管。</p>
+          <a class="closing__link" href="#install">安裝 WDA</a>
+        </div>
+      </section>
+
+      <section class="docs" id="docs" aria-labelledby="docs-title">
+        <div class="container">
+          <h2 class="docs__title" id="docs-title">文件</h2>
+          <ul class="doc-list">
+            <li><a href="https://github.com/monkey1wizard/Web-Design-Anchor/blob/main/docs/architecture.md"><code>docs/architecture.md</code></a><span>WDA 由什麼組成、邊界在哪、開發驗證與文件規則</span></li>
+            <li><a href="https://github.com/monkey1wizard/Web-Design-Anchor/blob/main/docs/generated-project.md"><code>docs/generated-project.md</code></a><span><code>wda.json</code> 欄位、專案樹與 <code>dist/</code> 對應</span></li>
+            <li><a href="https://github.com/monkey1wizard/Web-Design-Anchor/blob/main/docs/commands.md"><code>docs/commands.md</code></a><span>四個指令做什麼、診斷輸出怎麼讀</span></li>
+            <li><a href="https://github.com/monkey1wizard/Web-Design-Anchor/blob/main/docs/design-system.md"><code>docs/design-system.md</code></a><span>預設與退回、Token、Adapter 邊界</span></li>
+            <li><a href="https://github.com/monkey1wizard/Web-Design-Anchor/blob/main/docs/skill-spec.md"><code>docs/skill-spec.md</code></a><span>Skill 能放什麼、如何驗收</span></li>
+            <li><a href="https://github.com/monkey1wizard/Web-Design-Anchor/blob/main/docs/glossary.md"><code>docs/glossary.md</code></a><span>術語與詞彙定義</span></li>
+            <li><a href="https://github.com/monkey1wizard/Web-Design-Anchor/tree/main/docs/adr"><code>docs/adr/</code></a><span>哪些決策已裁定與其背景原因</span></li>
+            <li><a href="https://github.com/monkey1wizard/Web-Design-Anchor/blob/main/skills/wda/SKILL.md"><code>skills/wda/SKILL.md</code></a><span>AI 如何操作 <code>wda</code></span></li>
+          </ul>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container site-footer__inner">
+        <div class="site-footer__brand">
+          <p class="site-footer__name">Web Design Anchor</p>
+          <p class="site-footer__text">這個頁面以 WDA 與 Spectrum 2 建立。Spectrum 設計 token 值來自 Adobe Spectrum，依 Apache-2.0 授權使用。</p>
+        </div>
+        <ul class="site-footer__links">
+          <li><a href="https://github.com/monkey1wizard/Web-Design-Anchor">原始碼</a></li>
+          <li><a href="https://github.com/monkey1wizard/Web-Design-Anchor/blob/main/LICENSE">授權（Apache-2.0）</a></li>
+          <li><a href="https://github.com/monkey1wizard/Web-Design-Anchor/blob/main/SECURITY.md">安全性</a></li>
+        </ul>
+      </div>
+    </footer>
+  </sp-theme>
+
+  <script type="module" src="scripts/main.ts"></script>
+</body>
+</html>

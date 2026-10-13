@@ -1,0 +1,16 @@
+# Web Design Anchor — Git attributes
+
+# GAL execution state must stay byte-identical across checkouts.
+#
+# The test-first transition producer (`gal test-first-transition install`) does a
+# raw SHA-256 compare-and-swap against the prompt bytes on disk, and the CAS
+# journal records that same digest. With `core.autocrlf=true` and no attribute
+# pinning, a checkout rewrites these files to CRLF, the on-disk digest stops
+# matching the journal, and every later transition fails closed with
+# `stale transition CAS`. The transition journal itself also rejects any record
+# line containing a CR.
+#
+# Mirrors the same two lines in the GAL source repo's own .gitattributes.
+.dev/plans/*.md         eol=lf
+.dev/plans/*.prompt.md  eol=lf
+docs/**/*.md            eol=lf
