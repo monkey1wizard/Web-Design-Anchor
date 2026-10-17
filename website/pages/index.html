@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    (function () {
+      var root = document.documentElement;
+      root.setAttribute("data-js", "");
+      try {
+        var mode = localStorage.getItem("wda-website-color-mode");
+        if (mode === "light" || mode === "dark") root.setAttribute("data-theme", mode);
+      } catch (error) {}
+    })();
+  </script>
+  <title>Web Design Anchor｜不熟悉網頁開發，也能透過 AI 做出好維護的網站</title>
+  <meta name="description" content="即使你不是工程師、不熟悉網頁開發，搭配 WDA 和 AI 聊天，就能做出簡單、好維護的靜態網頁。產出的網頁專案架構清楚，頁面、樣式和設計規範都有固定的位置。">
+  <link rel="stylesheet" href="styles/tokens.css">
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+  <header class="top-bar">
+    <div class="container top-bar__inner">
+      <details class="lang-switch">
+        <summary class="utility-button utility-button--icon">
+          <svg class="utility-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="7.25"/><ellipse cx="10" cy="10" rx="3" ry="7.25"/><path d="M2.75 10h14.5M4.2 6.25c3.4 1.3 7.2 1.3 11.6 0M4.2 13.75c3.4-1.3 7.2-1.3 11.6 0"/></svg>
+          <span class="visually-hidden">語言：繁體中文</span>
+        </summary>
+        <ul class="lang-switch__menu">
+          <li><a class="lang-switch__item" href="index.html" hreflang="zh-TW" lang="zh-TW" aria-current="true">
+            <span>繁體中文</span>
+            <svg class="utility-icon lang-switch__check" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></svg>
+          </a></li>
+        </ul>
+      </details>
+      <fieldset class="color-mode">
+        <legend class="visually-hidden">色彩模式</legend>
+        <label class="color-mode__option">
+          <input class="visually-hidden" type="radio" name="color-mode" value="light">
+          <svg class="utility-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="3.25"/><path d="M10 2.5v1.75M10 15.75v1.75M2.5 10h1.75M15.75 10h1.75M4.7 4.7l1.24 1.24M14.06 14.06l1.24 1.24M4.7 15.3l1.24-1.24M14.06 5.94l1.24-1.24"/></svg>
+          <span class="visually-hidden">淺色</span>
+          <span class="color-mode__tip" aria-hidden="true">淺色</span>
+        </label>
+        <label class="color-mode__option">
+          <input class="visually-hidden" type="radio" name="color-mode" value="dark">
+          <svg class="utility-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M16.5 12.2A6.75 6.75 0 0 1 7.8 3.5a6.75 6.75 0 1 0 8.7 8.7z"/></svg>
+          <span class="visually-hidden">深色</span>
+          <span class="color-mode__tip" aria-hidden="true">深色</span>
+        </label>
+        <label class="color-mode__option">
+          <input class="visually-hidden" type="radio" name="color-mode" value="system" checked>
+          <svg class="utility-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="2.75" y="3.75" width="14.5" height="10" rx="1.5"/><path d="M7 17.25h6M10 13.75v3.5"/></svg>
+          <span class="visually-hidden">跟隨系統</span>
+          <span class="color-mode__tip" aria-hidden="true">跟隨系統</span>
+        </label>
+      </fieldset>
+      <a class="utility-button utility-button--icon" href="https://github.com/monkey1wizard/Web-Design-Anchor">
+        <svg class="utility-icon utility-icon--solid" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></svg>
+        <span class="visually-hidden">GitHub 上的 WDA 原始碼</span>
+      </a>
+    </div>
+  </header>
+
+  <sp-theme system="spectrum-two" scale="medium">
+    <script>
+      (function () {
+        var theme = document.currentScript.parentElement;
+        try {
+          var mode = document.documentElement.getAttribute("data-theme");
+          if (mode !== "light" && mode !== "dark") {
+            mode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+          }
+          theme.setAttribute("color", mode);
+        } catch (error) {
+          theme.setAttribute("color", "light");
+        }
+      })();
+    </script>
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="container hero__inner">
+          <div class="hero__text">
+            <h1 class="hero__title" id="hero-title">Web Design Anchor</h1>
+            <p class="hero__sub">不熟悉網頁開發，也能透過 AI 做出好維護的網站。</p>
+          </div>
+          <nav class="toc" aria-label="本頁的五個問題">
+            <ol>
+              <li><a href="#no-code"><svg class="toc__icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M8 5l5 5-5 5"/></svg>我不會寫程式，也能用嗎？</a></li>
+              <li><a href="#files"><svg class="toc__icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M8 5l5 5-5 5"/></svg>專案裡有什麼？</a></li>
+              <li><a href="#dist"><svg class="toc__icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M8 5l5 5-5 5"/></svg>wda build 建立了什麼？</a></li>
+              <li><a href="#no-lock-in"><svg class="toc__icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M8 5l5 5-5 5"/></svg>不用 WDA 之後，網站還能跑嗎？</a></li>
+              <li><a href="#install"><svg class="toc__icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M8 5l5 5-5 5"/></svg>怎麼開始？</a></li>
+            </ol>
+          </nav>
+        </div>
+      </section>
+
+      <section class="q" id="no-code" aria-labelledby="no-code-title">
+        <div class="container q__split">
+          <div class="q__head">
+            <h2 class="q__title" id="no-code-title">我不會寫程式，也能用嗎？</h2>
+            <p class="q__answer">可以。即使你不是工程師、不熟悉網頁開發，搭配 WDA 和 AI 聊天，就能做出簡單、好維護的靜態網頁。產出的網頁專案架構清楚，頁面、樣式和設計規範都有固定的位置。因此不只是內容好改，配色、字級等設計風格也能集中調整，網站改版多次也不會走樣。</p>
+          </div>
+          <ol class="chat" aria-label="範例對話">
+            <li class="chat__turn">
+              <p class="chat__who">Designer，範例</p>
+              <p class="chat__say chat__say--you">把標題放大，深色模式也要好讀</p>
+            </li>
+            <li class="chat__turn">
+              <p class="chat__who">AI，範例</p>
+              <p class="chat__say">已讀 docs/design.md，改了 styles/main.css 與 tokens/tokens.json，接著執行 wda build，建置通過。</p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="q" id="files" aria-labelledby="files-title">
+        <div class="container q__split">
+          <div class="q__head">
+            <h2 class="q__title" id="files-title">專案裡有什麼？</h2>
+            <p class="q__answer">專案資料夾裡是你和 AI 維護網站用的檔案：頁面、樣式、Design Tokens、程式與專案文件。</p>
+            <p class="q__answer">設計靠文件維護。docs/design.md 記錄這個專案的設計規則：採用的 Design System、無障礙基準、視覺審查標準與設計方向。AI 依照這份文件判斷畫面是否合格，改完後再把需要持續適用的決定寫回文件，所以設計規則會留在檔案裡，不會散落在聊天紀錄中。</p>
+          </div>
+          <ul class="dtree" aria-label="開發資料夾">
+            <li class="dtree__item">
+              <span class="dtree__row"><svg class="ficon ficon--folder" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2.5 5.5a1.5 1.5 0 0 1 1.5-1.5h3.6l1.8 2h6.6a1.5 1.5 0 0 1 1.5 1.5v7.5a1.5 1.5 0 0 1-1.5 1.5H4a1.5 1.5 0 0 1-1.5-1.5z"/></svg><span class="dtree__name">website/</span></span>
+              <ul>
+                <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--folder" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2.5 5.5a1.5 1.5 0 0 1 1.5-1.5h3.6l1.8 2h6.6a1.5 1.5 0 0 1 1.5 1.5v7.5a1.5 1.5 0 0 1-1.5 1.5H4a1.5 1.5 0 0 1-1.5-1.5z"/></svg><span class="dtree__name">pages/</span><span class="dtree__note">頁面進入點</span></span></li>
+                <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--folder" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2.5 5.5a1.5 1.5 0 0 1 1.5-1.5h3.6l1.8 2h6.6a1.5 1.5 0 0 1 1.5 1.5v7.5a1.5 1.5 0 0 1-1.5 1.5H4a1.5 1.5 0 0 1-1.5-1.5z"/></svg><span class="dtree__name">styles/</span><span class="dtree__note">樣式表</span></span></li>
+                <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--folder" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2.5 5.5a1.5 1.5 0 0 1 1.5-1.5h3.6l1.8 2h6.6a1.5 1.5 0 0 1 1.5 1.5v7.5a1.5 1.5 0 0 1-1.5 1.5H4a1.5 1.5 0 0 1-1.5-1.5z"/></svg><span class="dtree__name">tokens/</span><span class="dtree__note">Design Tokens：顏色、字級、間距等設計數值</span></span></li>
+                <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--folder" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2.5 5.5a1.5 1.5 0 0 1 1.5-1.5h3.6l1.8 2h6.6a1.5 1.5 0 0 1 1.5 1.5v7.5a1.5 1.5 0 0 1-1.5 1.5H4a1.5 1.5 0 0 1-1.5-1.5z"/></svg><span class="dtree__name">scripts/</span><span class="dtree__note">TypeScript 程式</span></span></li>
+                <li class="dtree__item">
+                  <span class="dtree__row"><svg class="ficon ficon--folder" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2.5 5.5a1.5 1.5 0 0 1 1.5-1.5h3.6l1.8 2h6.6a1.5 1.5 0 0 1 1.5 1.5v7.5a1.5 1.5 0 0 1-1.5 1.5H4a1.5 1.5 0 0 1-1.5-1.5z"/></svg><span class="dtree__name">docs/</span><span class="dtree__note">專案文件</span></span>
+                  <ul>
+                    <li class="dtree__item dtree__item--key"><span class="dtree__row"><svg class="ficon ficon--file" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/></svg><span class="dtree__name">design.md</span><span class="dtree__note">設計規則，AI 依這份判斷畫面</span></span></li>
+                  </ul>
+                </li>
+                <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--file" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/></svg><span class="dtree__name">wda.json</span><span class="dtree__note">專案名稱、技術基準、Design System 與 WDA 版本</span></span></li>
+                <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--file" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/></svg><span class="dtree__name">README.md</span><span class="dtree__note">專案說明</span></span></li>
+                <li class="dtree__item dtree__item--deploy"><span class="dtree__row"><svg class="ficon ficon--folder" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2.5 5.5a1.5 1.5 0 0 1 1.5-1.5h3.6l1.8 2h6.6a1.5 1.5 0 0 1 1.5 1.5v7.5a1.5 1.5 0 0 1-1.5 1.5H4a1.5 1.5 0 0 1-1.5-1.5z"/></svg><span class="dtree__name">dist/</span><span class="dtree__note">由 wda build 建立，用來部署</span></span></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="q" id="dist" aria-labelledby="dist-title">
+        <div class="container q__split">
+          <div class="q__head">
+            <h2 class="q__title" id="dist-title">wda build 建立了什麼？</h2>
+            <p class="q__answer">wda build 是 WDA 的建置指令，由 AI 在改完檔案後執行。它會先檢查專案，發現錯誤就停止，不會更動 dist/。檢查通過後，才會建立 dist/。</p>
+            <p class="q__answer">dist/ 只用來部署。每次執行 "wda build" 後都會重新產生整個 dist/，所以不要手動修改它。</p>
+          </div>
+          <ul class="dtree" aria-label="dist/ 的檔案與大小" data-replay>
+            <li class="dtree__item">
+              <span class="dtree__row"><svg class="ficon ficon--folder" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2.5 5.5a1.5 1.5 0 0 1 1.5-1.5h3.6l1.8 2h6.6a1.5 1.5 0 0 1 1.5 1.5v7.5a1.5 1.5 0 0 1-1.5 1.5H4a1.5 1.5 0 0 1-1.5-1.5z"/></svg><span class="dtree__name">dist/</span></span>
+              <ul>
+                <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--html" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path class="ficon__mark" d="M8.5 10.5l-1.5 1.5 1.5 1.5M11.5 10.5l1.5 1.5-1.5 1.5"/></svg><span class="dtree__name">index.html</span><span class="dtree__size">19 KiB</span></span></li>
+                <li class="dtree__item">
+                  <span class="dtree__row"><svg class="ficon ficon--folder" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2.5 5.5a1.5 1.5 0 0 1 1.5-1.5h3.6l1.8 2h6.6a1.5 1.5 0 0 1 1.5 1.5v7.5a1.5 1.5 0 0 1-1.5 1.5H4a1.5 1.5 0 0 1-1.5-1.5z"/></svg><span class="dtree__name">styles/</span></span>
+                  <ul>
+                    <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--css" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path class="ficon__mark" d="M9 10.5l-1.5 1.5L9 13.5M11 10.5l1.5 1.5-1.5 1.5"/></svg><span class="dtree__name">main.css</span><span class="dtree__size">18 KiB</span></span></li>
+                    <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--css" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path class="ficon__mark" d="M9 10.5l-1.5 1.5L9 13.5M11 10.5l1.5 1.5-1.5 1.5"/></svg><span class="dtree__name">tokens.css</span><span class="dtree__size">2 KiB</span></span></li>
+                  </ul>
+                </li>
+                <li class="dtree__item">
+                  <span class="dtree__row"><svg class="ficon ficon--folder" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2.5 5.5a1.5 1.5 0 0 1 1.5-1.5h3.6l1.8 2h6.6a1.5 1.5 0 0 1 1.5 1.5v7.5a1.5 1.5 0 0 1-1.5 1.5H4a1.5 1.5 0 0 1-1.5-1.5z"/></svg><span class="dtree__name">scripts/</span></span>
+                  <ul>
+                    <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--js" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path class="ficon__mark" d="M8.5 10.5l-1.5 1.5 1.5 1.5M11.5 10.5l1.5 1.5-1.5 1.5"/></svg><span class="dtree__name">main.js</span><span class="dtree__size">408 KiB</span></span></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="q" id="no-lock-in" aria-labelledby="no-lock-in-title">
+        <div class="container q__split">
+          <div class="q__head">
+            <h2 class="q__title" id="no-lock-in-title">不用 WDA 之後，網站還能跑嗎？</h2>
+            <p class="q__answer">能。WDA 只在建立和建置專案時使用，網站執行時不需要它。dist/ 放到任何靜態主機都能運作。</p>
+          </div>
+          <pre class="term" aria-label="wda build 的輸出" data-replay><span class="term__line term__line--cmd">$ wda build</span><span class="term__line">Build succeeded.</span><span class="term__line">Output: &lt;project&gt;/dist</span><span class="term__line term__dim">HTTP server required; opening via file:// will not work.</span></pre>
+        </div>
+      </section>
+
+      <section class="q q--install" id="install" aria-labelledby="install-title">
+        <div class="container">
+          <div class="q__head">
+            <h2 class="q__title" id="install-title">怎麼開始？</h2>
+            <p class="q__answer">先準備好 Git 與 Deno，不需要 Node.js，選一種方式安裝。</p>
+          </div>
+          <div class="routes__group">
+            <h3 class="routes__os">macOS 與 Linux</h3>
+            <dl class="routes">
+              <div class="routes__row"><dt>Homebrew</dt><dd class="routes__cmd"><div class="cmd"><code class="cmd__text">brew install monkey1wizard/tap/wda</code><button class="cmd__copy" type="button"><svg class="cmd__icon cmd__icon--copy" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="7" y="7" width="9.5" height="9.5" rx="2"/><path d="M13 4.5V4.5A1.5 1.5 0 0 0 11.5 3H5A2 2 0 0 0 3 5v6.5A1.5 1.5 0 0 0 4.5 13"/></svg><svg class="cmd__icon cmd__icon--done" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></svg><span class="visually-hidden">複製 Homebrew 指令</span></button></div></dd></div>
+              <div class="routes__row"><dt>終端機輸入</dt><dd class="routes__cmd"><div class="cmd"><code class="cmd__text">curl -fsSL https://raw.githubusercontent.com/monkey1wizard/web-design-anchor/main/packaging/install.sh | bash</code><button class="cmd__copy" type="button"><svg class="cmd__icon cmd__icon--copy" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="7" y="7" width="9.5" height="9.5" rx="2"/><path d="M13 4.5V4.5A1.5 1.5 0 0 0 11.5 3H5A2 2 0 0 0 3 5v6.5A1.5 1.5 0 0 0 4.5 13"/></svg><svg class="cmd__icon cmd__icon--done" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></svg><span class="visually-hidden">複製 macOS 與 Linux 安裝程式指令</span></button></div></dd></div>
+            </dl>
+          </div>
+          <div class="routes__group">
+            <h3 class="routes__os">Windows</h3>
+            <dl class="routes">
+              <div class="routes__row"><dt>WinGet</dt><dd class="routes__cmd"><div class="cmd"><code class="cmd__text">winget install Monkey1Wizard.WDA</code><button class="cmd__copy" type="button"><svg class="cmd__icon cmd__icon--copy" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="7" y="7" width="9.5" height="9.5" rx="2"/><path d="M13 4.5V4.5A1.5 1.5 0 0 0 11.5 3H5A2 2 0 0 0 3 5v6.5A1.5 1.5 0 0 0 4.5 13"/></svg><svg class="cmd__icon cmd__icon--done" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></svg><span class="visually-hidden">複製 WinGet 指令</span></button></div></dd></div>
+              <div class="routes__row"><dt>PowerShell輸入</dt><dd class="routes__cmd"><div class="cmd"><code class="cmd__text">irm https://raw.githubusercontent.com/monkey1wizard/web-design-anchor/main/packaging/install.ps1 | iex</code><button class="cmd__copy" type="button"><svg class="cmd__icon cmd__icon--copy" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="7" y="7" width="9.5" height="9.5" rx="2"/><path d="M13 4.5V4.5A1.5 1.5 0 0 0 11.5 3H5A2 2 0 0 0 3 5v6.5A1.5 1.5 0 0 0 4.5 13"/></svg><svg class="cmd__icon cmd__icon--done" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></svg><span class="visually-hidden">複製 Windows 安裝程式指令</span></button></div></dd></div>
+            </dl>
+          </div>
+          <div class="routes__group">
+            <h3 class="routes__os">已安裝 Rust</h3>
+            <dl class="routes">
+              <div class="routes__row"><dt>Cargo</dt><dd class="routes__cmd"><div class="cmd"><code class="cmd__text">cargo install --git https://github.com/monkey1wizard/Web-Design-Anchor --locked</code><button class="cmd__copy" type="button"><svg class="cmd__icon cmd__icon--copy" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="7" y="7" width="9.5" height="9.5" rx="2"/><path d="M13 4.5V4.5A1.5 1.5 0 0 0 11.5 3H5A2 2 0 0 0 3 5v6.5A1.5 1.5 0 0 0 4.5 13"/></svg><svg class="cmd__icon cmd__icon--done" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></svg><span class="visually-hidden">複製 Cargo 指令</span></button></div></dd></div>
+            </dl>
+          </div>
+          <div class="routes__group">
+            <h3 class="routes__os">安裝之後</h3>
+            <dl class="routes">
+              <div class="routes__row"><dt>確認版本</dt><dd class="routes__cmd"><div class="cmd"><code class="cmd__text">wda --version</code><button class="cmd__copy" type="button"><svg class="cmd__icon cmd__icon--copy" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="7" y="7" width="9.5" height="9.5" rx="2"/><path d="M13 4.5V4.5A1.5 1.5 0 0 0 11.5 3H5A2 2 0 0 0 3 5v6.5A1.5 1.5 0 0 0 4.5 13"/></svg><svg class="cmd__icon cmd__icon--done" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></svg><span class="visually-hidden">複製確認版本指令</span></button></div></dd></div>
+              <div class="routes__row"><dt>建立新專案</dt><dd class="routes__cmd"><div class="cmd"><code class="cmd__text">wda init</code><button class="cmd__copy" type="button"><svg class="cmd__icon cmd__icon--copy" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="7" y="7" width="9.5" height="9.5" rx="2"/><path d="M13 4.5V4.5A1.5 1.5 0 0 0 11.5 3H5A2 2 0 0 0 3 5v6.5A1.5 1.5 0 0 0 4.5 13"/></svg><svg class="cmd__icon cmd__icon--done" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></svg><span class="visually-hidden">複製建立新專案指令</span></button></div></dd></div>
+            </dl>
+          </div>
+          <p class="routes__note">建立新專案時，在空的目標資料夾執行 <code>wda init</code>，即可產生標準專案目錄結構與設定檔，並交由 AI 協助開發。</p>
+          <p class="routes__note">兩個「安裝程式」會從 <a href="https://github.com/monkey1wizard/Web-Design-Anchor/releases">GitHub Releases</a> 下載最新穩定版並驗證 SHA-256。也可以到 GitHub Releases 手動下載。</p>
+          <p class="visually-hidden" id="copy-status" role="status"></p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container site-footer__inner">
+        <div class="site-footer__brand">
+          <p class="site-footer__name">Web Design Anchor</p>
+          <p class="site-footer__text">這個頁面以 WDA 與 Spectrum 2 建立。Spectrum 設計 token 值來自 Adobe Spectrum，經本專案修改，依 Apache-2.0 授權使用。</p>
+          <p class="site-footer__text">版面設計使用 <a href="https://impeccable.style/">Impeccable</a> skill 協助完成。</p>
+        </div>
+        <ul class="site-footer__links">
+          <li><a href="https://github.com/monkey1wizard/Web-Design-Anchor">原始碼</a></li>
+          <li><a href="https://github.com/monkey1wizard/Web-Design-Anchor/blob/main/LICENSE">授權 (Apache-2.0)</a></li>
+          <li><a href="https://github.com/monkey1wizard/Web-Design-Anchor/blob/main/SECURITY.md">安全性</a></li>
+        </ul>
+      </div>
+    </footer>
+  </sp-theme>
+
+  <script type="module" src="scripts/main.ts"></script>
+</body>
+</html>

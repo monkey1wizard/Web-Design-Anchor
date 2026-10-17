@@ -1,0 +1,11 @@
+{
+  "imports": {
+    "@spectrum-web-components/button": "npm:@spectrum-web-components/button@1.12.4",
+    "@spectrum-web-components/card": "npm:@spectrum-web-components/card@1.12.4",
+    "@spectrum-web-components/dialog": "npm:@spectrum-web-components/dialog@1.12.4",
+    "@spectrum-web-components/picker": "npm:@spectrum-web-components/picker@1.12.4",
+    "@spectrum-web-components/textfield": "npm:@spectrum-web-components/textfield@1.12.4",
+    "@spectrum-web-components/theme": "npm:@spectrum-web-components/theme@1.12.4",
+    "lit": "npm:lit@^3.3.3"
+  }
+}

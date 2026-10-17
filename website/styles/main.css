@@ -1,0 +1,1135 @@
+/*
+ * Web Design Anchor Website: page styles.
+ *
+ * Interface colors come from tokens/tokens.json, which `wda build` emits as
+ * dist/styles/tokens.css. This file maps those color tokens to a small
+ * semantic layer (--c-*) so color modes can remap one place. Background roles
+ * follow Spectrum 2: page = layer-1, bands and footer = base, raised
+ * surfaces = layer-2. Shadows use fixed colors. Visual language follows
+ * Spectrum 2: flat surfaces with hairline borders, rounded corners, a single
+ * 2px focus ring with a gap, an 8px grid, and the XL (1440px) container.
+ */
+
+:root {
+  /* Semantic color layer */
+  --c-page: var(--color-background-page);
+  --c-surface: var(--color-background-surface);
+  --c-subtle: var(--color-background-subtle);
+  --c-raised: var(--color-background-elevated);
+  --c-text: var(--color-text-primary);
+  --c-text-2: var(--color-text-secondary);
+  --c-text-muted: var(--color-text-muted);
+  --c-brand: var(--color-brand-primary);
+  --c-accent-text: var(--color-text-link);
+  --c-border: var(--color-border-default);
+  --c-border-subtle: var(--color-border-subtle);
+  --c-focus: var(--color-border-focus);
+  --c-shadow: rgb(0 0 0 / 0.08);
+  color-scheme: light;
+
+  /* Adobe Clean first, then system Latin, then system CJK families. */
+  --font-sans: adobe-clean-spectrum-vf, adobe-clean, "Adobe Clean", "Source Sans 3",
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang TC", "Noto Sans TC",
+    "Noto Sans CJK TC", "Microsoft JhengHei", "Heiti TC", system-ui, sans-serif;
+  --font-mono: var(--font-family-mono);
+
+  --gutter: 16px;
+  --radius-control: 8px;
+  --radius-panel: 16px;
+  --container: 1440px;
+}
+
+/* Color modes. Dark values come from the color.dark token group. */
+
+:root[data-theme="dark"] {
+  --c-page: var(--color-dark-background-page);
+  --c-surface: var(--color-dark-background-surface);
+  --c-subtle: var(--color-dark-background-subtle);
+  --c-raised: var(--color-dark-background-elevated);
+  --c-text: var(--color-dark-text-primary);
+  --c-text-2: var(--color-dark-text-secondary);
+  --c-text-muted: var(--color-dark-text-muted);
+  --c-brand: var(--color-dark-brand-primary);
+  --c-accent-text: var(--color-dark-text-link);
+  --c-border: var(--color-dark-border-default);
+  --c-border-subtle: var(--color-dark-border-subtle);
+  --c-focus: var(--color-dark-border-focus);
+  --c-shadow: rgb(0 0 0 / 0.4);
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --c-page: var(--color-dark-background-page);
+    --c-surface: var(--color-dark-background-surface);
+    --c-subtle: var(--color-dark-background-subtle);
+    --c-raised: var(--color-dark-background-elevated);
+    --c-text: var(--color-dark-text-primary);
+    --c-text-2: var(--color-dark-text-secondary);
+    --c-text-muted: var(--color-dark-text-muted);
+    --c-brand: var(--color-dark-brand-primary);
+    --c-accent-text: var(--color-dark-text-link);
+    --c-border: var(--color-dark-border-default);
+    --c-border-subtle: var(--color-dark-border-subtle);
+    --c-focus: var(--color-dark-border-focus);
+    --c-shadow: rgb(0 0 0 / 0.4);
+    color-scheme: dark;
+  }
+}
+
+@media (min-width: 600px) {
+  :root { --gutter: 24px; }
+}
+
+@media (min-width: 960px) {
+  :root { --gutter: 40px; }
+}
+
+@media (min-width: 1280px) {
+  :root { --gutter: 48px; }
+}
+
+/* Base */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scrollbar-color: var(--c-border) var(--c-page);
+}
+
+::selection {
+  background: color-mix(in srgb, var(--c-accent-text) 28%, transparent);
+  color: var(--c-text);
+}
+
+body {
+  margin: 0;
+  background: var(--c-page);
+  color: var(--c-text);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height-relaxed);
+}
+
+sp-theme {
+  display: block;
+  min-block-size: 100vh;
+  background: var(--c-page);
+  color: var(--c-text);
+  font-family: var(--font-sans);
+}
+
+h1,
+h2,
+h3,
+p,
+ul,
+ol,
+dl,
+dd {
+  margin: 0;
+}
+
+ul,
+ol {
+  padding: 0;
+  list-style: none;
+}
+
+p {
+  max-inline-size: 72ch;
+}
+
+.visually-hidden {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+img,
+svg {
+  display: block;
+  max-inline-size: 100%;
+}
+
+a {
+  color: var(--c-accent-text);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--c-focus);
+  outline-offset: 2px;
+}
+
+code {
+  padding: 0.08em 0.36em;
+  border-radius: 6px;
+  background: var(--c-subtle);
+  color: var(--c-text);
+  font-family: var(--font-mono);
+  font-size: 0.88em;
+}
+
+h2 code {
+  font-size: 0.85em;
+  font-weight: inherit;
+}
+
+/* Layout */
+
+.container {
+  inline-size: 100%;
+  max-inline-size: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Top bar */
+
+.top-bar {
+  position: relative;
+  z-index: 20;
+  background: var(--c-surface);
+  border-block-end: 1px solid var(--c-border-subtle);
+  color: var(--c-text-2);
+  font-size: 0.875rem;
+}
+
+.top-bar__inner {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  min-block-size: 48px;
+  padding-block: 0.5rem;
+}
+
+.utility-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  min-block-size: 32px;
+  min-inline-size: 32px;
+  padding-inline: 0.625rem;
+  border-radius: var(--radius-control);
+  color: var(--c-text-2);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.utility-button:hover {
+  background: var(--c-subtle);
+  color: var(--c-text);
+}
+
+.utility-button--icon {
+  inline-size: 32px;
+  padding: 0;
+  justify-content: center;
+}
+
+.utility-icon {
+  flex: none;
+  inline-size: 18px;
+  block-size: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.utility-icon--solid {
+  fill: currentColor;
+  stroke: none;
+}
+
+summary {
+  list-style: none;
+}
+
+summary::-webkit-details-marker {
+  display: none;
+}
+
+summary::marker {
+  content: "";
+}
+
+.lang-switch {
+  position: relative;
+}
+
+.lang-switch[open] > summary {
+  background: var(--c-subtle);
+  color: var(--c-text);
+}
+
+/* Color mode switch (segmented control) */
+
+.color-mode {
+  display: none;
+  min-inline-size: 0;
+  margin: 0;
+  padding: 2px;
+  gap: 2px;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-control);
+  background: var(--c-page);
+}
+
+:root[data-js] .color-mode {
+  display: inline-flex;
+  align-items: center;
+}
+
+.color-mode__option {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 28px;
+  min-inline-size: 28px;
+  padding-inline: 0.3125rem;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: var(--c-text-2);
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.color-mode__option:hover {
+  background: var(--c-subtle);
+  color: var(--c-text);
+}
+
+.color-mode__option:has(input:checked) {
+  border-color: var(--c-text-2);
+  background: var(--c-raised);
+  color: var(--c-text);
+  font-weight: var(--font-weight-bold);
+  box-shadow: 0 1px 2px var(--c-shadow);
+}
+
+.color-mode__option:has(input:focus-visible) {
+  outline: 2px solid var(--c-focus);
+  outline-offset: 2px;
+}
+
+.color-mode__tip {
+  position: absolute;
+  /* Start at the segment's border edge (1px border), so the tip touches it without overlapping. */
+  inset-block-start: calc(100% + 1px);
+  inset-inline-start: 50%;
+  z-index: 30;
+  padding: 0.25rem 0.5rem;
+  border: 1px solid var(--c-border);
+  border-radius: 6px;
+  background: var(--c-raised);
+  color: var(--c-text);
+  box-shadow: 0 2px 6px var(--c-shadow);
+  font-size: 0.8125rem;
+  font-weight: var(--font-weight-medium);
+  line-height: 1.4;
+  white-space: nowrap;
+  transform: translateX(-50%);
+  visibility: hidden;
+}
+
+.color-mode__option:last-child .color-mode__tip {
+  inset-inline-start: auto;
+  inset-inline-end: 0;
+  transform: none;
+}
+
+.color-mode__option:hover .color-mode__tip,
+.color-mode__option:has(:focus-visible) .color-mode__tip {
+  visibility: visible;
+}
+
+.color-mode__option.is-tip-dismissed .color-mode__tip {
+  visibility: hidden;
+}
+
+.lang-switch__menu {
+  position: absolute;
+  inset-block-start: calc(100% + 4px);
+  inset-inline-start: 0;
+  z-index: 30;
+  inline-size: max-content;
+  min-inline-size: 100%;
+  max-inline-size: calc(100vw - 2 * var(--gutter));
+  padding: 0.25rem;
+  border: 1px solid var(--c-border-subtle);
+  border-radius: var(--radius-control);
+  background: var(--c-raised);
+  box-shadow: 0 8px 24px var(--c-shadow);
+}
+
+.lang-switch__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  min-block-size: 32px;
+  padding-inline: 0.75rem;
+  border-radius: 6px;
+  color: var(--c-text);
+  font-weight: var(--font-weight-medium);
+  text-decoration: none;
+}
+
+.lang-switch__item:hover {
+  background: var(--c-subtle);
+}
+
+.lang-switch__item[aria-current="true"] {
+  color: var(--c-accent-text);
+}
+
+/* First viewport: title, subtitle, and the five-question contents */
+
+.hero__inner {
+  display: grid;
+  gap: 2rem;
+  padding-block: 3.5rem 2.5rem;
+}
+
+.hero__title {
+  font-size: clamp(2.5rem, 1.6rem + 3vw, 4rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  text-wrap: balance;
+}
+
+.hero__sub {
+  max-inline-size: 30em;
+  margin-block-start: 1rem;
+  color: var(--c-text-2);
+  font-size: clamp(1.125rem, 1rem + 0.5vw, 1.375rem);
+  line-height: var(--line-height-relaxed);
+  text-wrap: pretty;
+}
+
+.toc ol {
+  display: grid;
+  gap: 2px;
+}
+
+.toc a {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-block-size: 44px;
+  margin-inline: -0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-control);
+  color: var(--c-text);
+  font-size: 1.0625rem;
+  text-decoration: none;
+}
+
+.toc a:hover {
+  background: var(--c-subtle);
+}
+
+.toc__icon {
+  flex: none;
+  inline-size: 18px;
+  block-size: 18px;
+  fill: none;
+  stroke: var(--c-brand);
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* Questions: each one is a heading, a short answer, and real evidence */
+
+.q {
+  padding-block: 3.5rem;
+  border-block-start: 1px solid var(--c-border);
+}
+
+.q__split {
+  display: grid;
+  gap: 1.75rem;
+}
+
+.q__head {
+  display: grid;
+  gap: 0.75rem;
+  align-content: start;
+}
+
+.q {
+  --q-title-size: clamp(1.75rem, 1.4rem + 1.2vw, 2.5rem);
+}
+
+.q__title {
+  max-inline-size: 16em;
+  font-size: var(--q-title-size);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  line-height: var(--line-height-tight);
+  text-wrap: balance;
+}
+
+.q__keep {
+  display: inline-block;
+}
+
+.q__answer {
+  max-inline-size: 36em;
+  color: var(--c-text-2);
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.1875rem);
+}
+
+.q .container:not(.q__split) > .q__head + * {
+  margin-block-start: 1.75rem;
+}
+
+/* Question 1: an example exchange */
+
+.chat {
+  display: grid;
+  min-inline-size: 0;
+}
+
+.chat__turn {
+  display: grid;
+  gap: 0.25rem;
+  padding-block: 1rem;
+  border-block-end: 1px solid var(--c-border);
+}
+
+.chat__who {
+  color: var(--c-text-muted);
+  font-size: 0.875rem;
+}
+
+.chat__say {
+  color: var(--c-text-2);
+  font-size: 1rem;
+  overflow-wrap: anywhere;
+}
+
+.chat__say--you {
+  color: var(--c-text);
+  font-size: clamp(1.1875rem, 1.1rem + 0.4vw, 1.375rem);
+  line-height: var(--line-height-base);
+}
+
+/* Question 2: the project tree, with dist/ as the folder that ships */
+
+.dtree {
+  min-inline-size: 0;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-panel);
+  background: var(--c-raised);
+}
+
+.dtree ul {
+  margin-inline-start: 0.5625rem;
+  padding-inline-start: 1.125rem;
+  border-inline-start: 1px solid var(--c-border);
+}
+
+.dtree__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.625rem;
+  min-block-size: 2.5rem;
+}
+
+.dtree__name {
+  min-inline-size: 0;
+  font-family: var(--font-mono);
+  font-size: 0.9375rem;
+  overflow-wrap: anywhere;
+}
+
+.dtree__note {
+  flex-basis: 100%;
+  margin-block-end: 0.375rem;
+  padding-inline-start: 1.875rem;
+  color: var(--c-text-2);
+  font-size: 0.875rem;
+}
+
+.dtree__item--key > .dtree__row .dtree__name,
+.dtree__item--key > .dtree__row .dtree__note {
+  color: var(--c-accent-text);
+  font-weight: var(--font-weight-bold);
+}
+
+
+.dtree__item--deploy > .dtree__row .dtree__name {
+  font-weight: var(--font-weight-bold);
+}
+
+.dtree__item--deploy > .dtree__row .dtree__note {
+  color: var(--c-accent-text);
+  font-weight: var(--font-weight-bold);
+}
+
+.dtree__size {
+  margin-inline-start: auto;
+  padding-inline-start: 1rem;
+  font-weight: var(--font-weight-bold);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.dtree__size.dtree__size--na {
+  color: var(--c-text-muted);
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-normal);
+  white-space: normal;
+  text-align: end;
+}
+
+/* File-type icons keep the same colors in both modes; each fill has a darker outline. */
+
+.ficon {
+  flex: none;
+  inline-size: 20px;
+  block-size: 20px;
+  stroke-width: 1.25;
+  stroke-linejoin: round;
+}
+
+.ficon__mark {
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
+.ficon--file {
+  fill: var(--c-raised);
+  stroke: var(--c-text-muted);
+}
+
+.ficon--folder {
+  fill: var(--color-filetype-folder-fill);
+  stroke: var(--color-filetype-folder-line);
+}
+
+.ficon--html {
+  fill: var(--color-filetype-html-fill);
+  stroke: var(--color-filetype-html-line);
+}
+
+.ficon--html .ficon__mark {
+  stroke: var(--color-filetype-html-mark);
+}
+
+.ficon--css {
+  fill: var(--color-filetype-css-fill);
+  stroke: var(--color-filetype-css-line);
+}
+
+.ficon--css .ficon__mark {
+  stroke: var(--color-filetype-css-mark);
+}
+
+.ficon--js {
+  fill: var(--color-filetype-js-fill);
+  stroke: var(--color-filetype-js-line);
+}
+
+.ficon--js .ficon__mark {
+  stroke: var(--color-filetype-js-mark);
+}
+
+/* Question 4: the build output, on the opposite mode's surface */
+
+.term {
+  --term-bg: var(--color-dark-background-page);
+  --term-text: var(--color-dark-text-primary);
+  --term-dim: var(--color-dark-text-secondary);
+  min-inline-size: 0;
+  padding: 1.25rem;
+  border-radius: var(--radius-panel);
+  background: var(--term-bg);
+  color: var(--term-text);
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.8;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+:root[data-theme="dark"] .term {
+  --term-bg: var(--color-background-page);
+  --term-text: var(--color-text-primary);
+  --term-dim: var(--color-text-secondary);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .term {
+    --term-bg: var(--color-background-page);
+    --term-text: var(--color-text-primary);
+    --term-dim: var(--color-text-secondary);
+  }
+}
+
+.term__dim {
+  color: var(--term-dim);
+}
+
+/* One block per output line, so a line can replay on its own. The command
+   line is only as wide as its text, so the typing steps match characters. */
+.term__line {
+  display: block;
+}
+
+.term__line--cmd {
+  inline-size: max-content;
+  max-inline-size: 100%;
+}
+
+/* Question 5: install routes */
+
+.q--install {
+  background: var(--c-surface);
+}
+
+.routes__group + .routes__group {
+  margin-block-start: 1.75rem;
+}
+
+.routes__os {
+  margin-block-end: 0.5rem;
+  color: var(--c-text-2);
+  font-size: 0.875rem;
+  font-weight: var(--font-weight-bold);
+  letter-spacing: 0.02em;
+}
+
+.routes {
+  min-inline-size: 0;
+  border-block-start: 1px solid var(--c-border);
+}
+
+.routes__row {
+  display: grid;
+  gap: 0.25rem;
+  padding-block: 0.875rem;
+  border-block-end: 1px solid var(--c-border-subtle);
+}
+
+.routes dt {
+  font-weight: var(--font-weight-bold);
+}
+
+.routes dd {
+  min-inline-size: 0;
+  color: var(--c-text-2);
+}
+
+.routes__cmd {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  overflow-wrap: anywhere;
+}
+
+.routes__note {
+  margin-block-start: 1rem;
+  color: var(--c-text-2);
+}
+
+dd.routes__cmd {
+  color: var(--c-text);
+}
+
+/* Command card: the command plus a copy button (shown only with JS) */
+
+.cmd {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.375rem 0.375rem 0.375rem 0.875rem;
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius-control);
+  background: var(--c-page);
+}
+
+.cmd__text {
+  flex: 1;
+  min-inline-size: 0;
+  padding: 0.375rem 0;
+  border-radius: 0;
+  background: none;
+  font-size: inherit;
+  line-height: 1.6;
+}
+
+.cmd__copy {
+  display: none;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  inline-size: 32px;
+  block-size: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: var(--c-text-2);
+  cursor: pointer;
+}
+
+:root[data-js] .cmd__copy {
+  display: inline-flex;
+}
+
+.cmd__copy:hover {
+  background: var(--c-subtle);
+  color: var(--c-text);
+}
+
+.cmd__icon {
+  inline-size: 18px;
+  block-size: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.cmd__icon--done,
+.cmd__copy.is-copied .cmd__icon--copy {
+  display: none;
+}
+
+.cmd__copy.is-copied .cmd__icon--done {
+  display: block;
+}
+
+.cmd__copy.is-copied {
+  color: var(--c-accent-text);
+}
+
+/* Documentation links */
+
+.more {
+  padding-block: 3rem 4rem;
+  border-block-start: 1px solid var(--c-border);
+}
+
+.more__title {
+  font-size: 1.25rem;
+  font-weight: var(--font-weight-bold);
+}
+
+.more__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.75rem;
+  margin-block-start: 1rem;
+}
+
+.more__links a {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 44px;
+}
+
+/* sm: 600px and up, still stacked */
+
+@media (min-width: 600px) {
+  .routes__row {
+    grid-template-columns: 10rem minmax(0, 1fr);
+    align-items: baseline;
+    gap: 1.5rem;
+  }
+}
+
+/* At 600px and up, notes sit at the end of their row. */
+
+@media (min-width: 600px) {
+  .dtree__note {
+    flex-basis: auto;
+    margin-block-end: 0;
+    margin-inline-start: auto;
+    padding-inline-start: 1rem;
+    text-align: end;
+  }
+}
+
+/* md: 960px and up, still stacked */
+
+@media (min-width: 960px) {
+  .q {
+    padding-block: 4.5rem;
+  }
+}
+
+/* lg: 1280px and up, the hero and each question go side by side */
+
+@media (min-width: 1280px) {
+  .hero__inner {
+    grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+    gap: 4rem;
+    align-items: start;
+    padding-block: 6.5rem 4.5rem;
+  }
+
+  .q {
+    padding-block: 5rem;
+  }
+
+  .q__split {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: 4.5rem;
+    align-items: start;
+  }
+
+  /* The title's cap line is the shared top. The chat's first line lines up
+     with it by text. The panels (.dtree, .term) line up by their top edge,
+     which is the strongest line in the right column. The title's cap line
+     sits about 0.358em below its box top (half-leading plus ascent minus cap
+     height), so the panels move down by that much of the title size. */
+  .q__split .chat__turn:first-child {
+    padding-block-start: 0.425rem;
+  }
+
+  .q__split > .dtree,
+  .q__split > .term {
+    margin-block: calc(var(--q-title-size) * 0.358) 0;
+  }
+
+  .dtree {
+    padding: 1.25rem 1.75rem;
+  }
+
+  .dtree__name {
+    font-size: 1rem;
+  }
+
+  .term {
+    padding: 1.75rem 2rem;
+    font-size: 1rem;
+  }
+}
+
+/* Footer */
+
+.site-footer {
+  padding-block: 2.5rem;
+  border-block-start: 1px solid var(--c-border-subtle);
+  background: var(--c-surface);
+}
+
+.site-footer__inner {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.site-footer__brand {
+  display: grid;
+  gap: 0.75rem;
+  justify-items: start;
+}
+
+.site-footer__name {
+  font-size: 1.0625rem;
+  font-weight: 800;
+}
+
+.site-footer__text {
+  max-inline-size: 60ch;
+  color: var(--c-text-2);
+  font-size: 0.875rem;
+}
+
+.site-footer__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+}
+
+.site-footer__links a {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 32px;
+  color: var(--c-text);
+  font-size: 0.9375rem;
+  font-weight: var(--font-weight-medium);
+}
+
+@media (min-width: 960px) {
+  .site-footer__inner {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
+  }
+}
+
+/* Motion
+ *
+ * Feedback motion confirms an action. Two replays re-enact the evidence:
+ * dist/ unfolds, and the build output prints. The page is complete without
+ * motion. Content is visible by default, and main.ts arms a replay only when
+ * IntersectionObserver exists and reduced motion is off. Movement uses only
+ * transform, opacity, clip-path, and one SVG stroke, so no animation changes
+ * layout.
+ */
+
+:root {
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Color mode switch: colors cross-fade for one switch. main.ts sets the class
+   for 260ms. Color is not movement, so this also runs with reduced motion. */
+:root.is-theme-fading *,
+:root.is-theme-fading *::before,
+:root.is-theme-fading *::after {
+  transition: background-color 200ms ease-out, border-color 200ms ease-out,
+    color 200ms ease-out, fill 200ms ease-out, stroke 200ms ease-out;
+}
+
+/* Arrival: after a question link scrolls to its section, a brand underline
+   as wide as the heading text shows where the reader landed, then fades.
+   It is a color change only, so it also runs with reduced motion. */
+.q:target .q__title {
+  text-decoration-line: underline;
+  text-decoration-color: transparent;
+  text-decoration-thickness: 3px;
+  text-underline-offset: 0.2em;
+  animation: arrive 1400ms ease-out 350ms both;
+}
+
+@keyframes arrive {
+  15%, 70% { text-decoration-color: var(--c-brand); }
+  to { text-decoration-color: transparent; }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  .utility-button,
+  .lang-switch__item,
+  .color-mode__option {
+    transition: background-color 130ms ease-out, border-color 130ms ease-out, color 130ms ease-out;
+  }
+
+  .toc a {
+    transition: background-color 130ms ease-out;
+  }
+
+  .toc__icon {
+    transition: transform 160ms var(--ease-out);
+  }
+
+  .toc a:hover .toc__icon,
+  .toc a:focus-visible .toc__icon {
+    transform: translateX(3px);
+  }
+
+  /* Copy: the button gives under the press, and the check draws itself. */
+  .cmd__copy {
+    transition: background-color 130ms ease-out, color 130ms ease-out, transform 100ms ease-out;
+  }
+
+  .cmd__copy:active {
+    transform: scale(0.92);
+  }
+
+  .cmd__copy.is-copied .cmd__icon--done path {
+    stroke-dasharray: 16;
+    animation: draw-check 220ms var(--ease-out) both;
+  }
+
+  @keyframes draw-check {
+    from { stroke-dashoffset: 16; }
+    to { stroke-dashoffset: 0; }
+  }
+
+  /* Replay: dist/ unfolds from its folder row, one row after another. */
+  .dtree.is-replay-armed > .dtree__item {
+    clip-path: inset(0 0 100% 0);
+  }
+
+  .dtree.is-replay-armed .dtree__row {
+    opacity: 0;
+  }
+
+  .dtree.is-replaying > .dtree__item {
+    animation: tree-unfold 480ms var(--ease-out) both;
+  }
+
+  .dtree.is-replaying .dtree__row {
+    animation: row-in 220ms var(--ease-out) both;
+    animation-delay: calc(var(--i, 0) * 45ms);
+  }
+
+  @keyframes tree-unfold {
+    from { clip-path: inset(0 0 100% 0); }
+    to { clip-path: inset(0 0 0 0); }
+  }
+
+  @keyframes row-in {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  /* Replay: the command types out, the build runs for a beat, then each
+     output line prints. "$ wda build" is 11 characters, hence steps(11). */
+  .term.is-replay-armed .term__line {
+    opacity: 0;
+  }
+
+  .term.is-replay-armed .term__line--cmd {
+    opacity: 1;
+    clip-path: inset(0 100% 0 0);
+  }
+
+  .term.is-replaying .term__line {
+    animation: line-in 220ms var(--ease-out) both;
+    animation-delay: calc(440ms + var(--i, 1) * 130ms);
+  }
+
+  .term.is-replaying .term__line--cmd {
+    animation: type-in 420ms steps(11, end) both;
+    animation-delay: 0ms;
+  }
+
+  @keyframes type-in {
+    from { clip-path: inset(0 100% 0 0); }
+    to { clip-path: inset(0 0 0 0); }
+  }
+
+  @keyframes line-in {
+    from { opacity: 0; transform: translateY(4px); }
+    to { opacity: 1; transform: none; }
+  }
+}

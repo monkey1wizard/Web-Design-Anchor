@@ -1,0 +1,11 @@
+{
+  "rules": {
+    "prh": {
+      "rulePaths": ["./prh.yml"]
+    },
+    "@textlint-rule/no-unmatched-pair": true,
+    "sentence-length": {
+      "max": 100
+    }
+  }
+}

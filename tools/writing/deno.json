@@ -1,0 +1,10 @@
+{
+  "nodeModulesDir": "auto",
+  "imports": {
+    "textlint": "npm:textlint@15.8.0",
+    "textlint-rule-prh": "npm:textlint-rule-prh@6.1.0",
+    "textlint-rule-sentence-length": "npm:textlint-rule-sentence-length@5.2.1",
+    "@textlint-rule/textlint-rule-no-unmatched-pair": "npm:@textlint-rule/textlint-rule-no-unmatched-pair@2.0.4",
+    "textlint-rule-write-good": "npm:textlint-rule-write-good@2.0.0"
+  }
+}

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spectrum 2 Starter</title>
+</head>
+<body>
+  <sp-theme system="spectrum-two" scale="medium" color="light">
+    <header>
+      <a href="#" class="brand-logo">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' fill='%232563eb' rx='4'/%3E%3C/svg%3E" alt="Spectrum 2 Starter brand mark">
+        <span>Spectrum 2 Starter</span>
+      </a>
+      <nav>
+        <ul>
+          <li><a href="#overview">Overview</a></li>
+          <li><a href="#features">Features</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <section id="overview" class="hero">
+        <h1>Adobe Spectrum 2 Starter</h1>
+        <p>A baseline wired against Adobe's Spectrum 2 design system, using vendor custom elements scoped inside a single theme provider.</p>
+        <sp-button variant="accent">Get Started</sp-button>
+      </section>
+
+      <section id="features" class="grid">
+        <sp-card heading="Search Categories">
+          <sp-picker label="Category" slot="footer"></sp-picker>
+        </sp-card>
+        <sp-card heading="Contact Us">
+          <sp-textfield label="Your name" slot="footer"></sp-textfield>
+        </sp-card>
+      </section>
+
+      <section id="contact">
+        <sp-button variant="secondary" id="open-dialog-trigger">Open Dialog</sp-button>
+        <sp-dialog-wrapper id="starter-dialog" headline="Starter Dialog" underlay dismissable>
+          <sp-dialog>
+            <p>This dialog is rendered through the Spectrum 2 component set loaded by the starter script.</p>
+          </sp-dialog>
+        </sp-dialog-wrapper>
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; 2026 Web Design Anchor. All rights reserved.</p>
+    </footer>
+  </sp-theme>
+
+  <script type="module" src="scripts/main.ts"></script>
+</body>
+</html>

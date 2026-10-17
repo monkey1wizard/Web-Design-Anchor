@@ -1,0 +1,12 @@
+{
+  "accessibilityBaseline": "wcag-2.2-aa",
+  "browserBaseline": "baseline-widely-available",
+  "designSystem": {
+    "name": "Spectrum 2",
+    "version": "1.12.4"
+  },
+  "pageArchitecture": "mpa",
+  "projectName": "Web Design Anchor Website",
+  "projectVersion": "2026-10-09T23:42:13+08:00",
+  "wdaVersion": "0.1.1"
+}

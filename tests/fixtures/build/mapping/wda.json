@@ -1,0 +1,9 @@
+{
+  "projectName": "build-mapping",
+  "projectVersion": "1.0.0",
+  "wdaVersion": "0.1.0",
+  "pageArchitecture": "mpa",
+  "browserBaseline": "baseline-widely-available",
+  "accessibilityBaseline": "wcag-2.2-aa",
+  "designSystem": { "name": "default", "version": "1.0.0" }
+}
