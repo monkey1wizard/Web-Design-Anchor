@@ -1,0 +1,390 @@
+{
+  "version": "5",
+  "specifiers": {
+    "npm:@spectrum-web-components/button@1.12.4": "1.12.4",
+    "npm:@spectrum-web-components/card@1.12.4": "1.12.4",
+    "npm:@spectrum-web-components/dialog@1.12.4": "1.12.4",
+    "npm:@spectrum-web-components/picker@1.12.4": "1.12.4",
+    "npm:@spectrum-web-components/textfield@1.12.4": "1.12.4",
+    "npm:@spectrum-web-components/theme@1.12.4": "1.12.4",
+    "npm:lit@^3.3.3": "3.3.3"
+  },
+  "npm": {
+    "@floating-ui/core@1.8.0": {
+      "integrity": "sha512-0CIZ5itps/8x7BG8dEIhs53BvCUH2PCoogtakwRTut+Arm58sJooJ0AuZhLw2HJYIR5cMLNPBSS728sPho2khQ==",
+      "dependencies": [
+        "@floating-ui/utils@0.2.12"
+      ]
+    },
+    "@floating-ui/dom@1.7.4": {
+      "integrity": "sha512-OOchDgh4F2CchOX94cRVqhvy7b3AFb+/rQXyswmzmGakRfkMgoWVjfnLWkRirfLEfuD4ysVW16eXzwt3jHIzKA==",
+      "dependencies": [
+        "@floating-ui/core",
+        "@floating-ui/utils@0.2.12"
+      ]
+    },
+    "@floating-ui/utils@0.2.10": {
+      "integrity": "sha512-aGTxbpbg8/b5JfU1HXSrbH3wXZuLPJcNEcZQFMxLs3oSzgtVu6nFPkbbGGUvBcUjKV2YyB9Wxxabo+HEH9tcRQ=="
+    },
+    "@floating-ui/utils@0.2.12": {
+      "integrity": "sha512-HpCo8tmWzLVad5s2d19EhAz5zqrrQ6s69qd6moPMQvkOuSwDT1YgRfWSVuc4ennqrgv3OHppiOGMQ7oC13yIww=="
+    },
+    "@lit-labs/observers@2.0.2": {
+      "integrity": "sha512-eZb5+W9Cb0e/Y5m1DNxBSGTvGB2TAVTGMnTxL/IzFhPQEcZIAHewW1eVBhN8W07A5tirRaAmmF6fGL1V20p3gQ==",
+      "dependencies": [
+        "@lit/reactive-element"
+      ]
+    },
+    "@lit-labs/ssr-dom-shim@1.6.0": {
+      "integrity": "sha512-VHb0ALPMTlgKjM6yIxxoQNnpKyUKLD04VzeQdsiXkMqkvYlAHxq9glGLmgbb889/1GsohSOAjvQYoiBppXFqrQ=="
+    },
+    "@lit/reactive-element@2.1.2": {
+      "integrity": "sha512-pbCDiVMnne1lYUIaYNN5wrwQXDtHaYtg7YEFPeW+hws6U47WeFvISGUWekPGKWOP1ygrs0ef0o1VJMk1exos5A==",
+      "dependencies": [
+        "@lit-labs/ssr-dom-shim"
+      ]
+    },
+    "@spectrum-web-components/action-button@1.12.4": {
+      "integrity": "sha512-LA1zDppq5c+7TVZ78GE4FwuYoxa7GVe+4T207L4DAQoadvi3GQJtVPcBCGfVDyjOGAWyvAxn8R9Uv8eBMVbS0A==",
+      "dependencies": [
+        "@spectrum-web-components/base",
+        "@spectrum-web-components/button",
+        "@spectrum-web-components/icon",
+        "@spectrum-web-components/icons-ui",
+        "@spectrum-web-components/shared"
+      ]
+    },
+    "@spectrum-web-components/alert-dialog@1.12.4": {
+      "integrity": "sha512-DGdaQ2D+6/tqIEeiZ9PuGQLsViWzfvlZ7B1jA8DoUrFOD2DWSJhZW9Qpo+QgmTUIBI3EW/rpHuZRT26+Y9c+hw==",
+      "dependencies": [
+        "@lit-labs/observers",
+        "@spectrum-web-components/base",
+        "@spectrum-web-components/button",
+        "@spectrum-web-components/button-group",
+        "@spectrum-web-components/divider",
+        "@spectrum-web-components/icons-workflow",
+        "@spectrum-web-components/shared"
+      ]
+    },
+    "@spectrum-web-components/asset@1.12.4": {
+      "integrity": "sha512-sn5ezUxXUCZUJuXiFWSQbEPffTZD88FuGbARqbJDX1KMrJiPrShJvQIQ84UisBlQcpoTxAthya93TRG8F3GzuA==",
+      "dependencies": [
+        "@spectrum-web-components/base"
+      ]
+    },
+    "@spectrum-web-components/base@1.12.4": {
+      "integrity": "sha512-GX/yC5P4TeQyt4B33uvXqngwUn3iyi+ze+G9K4pZzTln6xLdaorURy4BoK/4o3/vzlak1S/G7WzJMQjZKdStwg==",
+      "dependencies": [
+        "lit"
+      ]
+    },
+    "@spectrum-web-components/button-group@1.12.4": {
+      "integrity": "sha512-ApKaS//Kua81AUE/uaxlogp3jyOAO+PoYBgsVxgQuHqFbOYC6xA4rithQk8TQPBxwUS4cWYPBBh3gmmQqY6c7Q==",
+      "dependencies": [
+        "@spectrum-web-components/base",
+        "@spectrum-web-components/button"
+      ]
+    },
+    "@spectrum-web-components/button@1.12.4": {
+      "integrity": "sha512-gzcz+LwzsvO7JS5ePgMwpzfBEnsxOApGz/igTGy9WKuT2paDp6ODGS8nanttvBx0QeGeaX5QtQTInwEdwZuhXw==",
+      "dependencies": [
+        "@spectrum-web-components/base",
+        "@spectrum-web-components/clear-button",
+        "@spectrum-web-components/close-button",
+        "@spectrum-web-components/icon",
+        "@spectrum-web-components/icons-ui",
+        "@spectrum-web-components/progress-circle",
+        "@spectrum-web-components/reactive-controllers",
+        "@spectrum-web-components/shared"
+      ]
+    },
+    "@spectrum-web-components/card@1.12.4": {
+      "integrity": "sha512-bzABsZkamCiDGWiCYlOqs+RvCIyTjOaWFfyAxw6pW8XA/mP6OngWjnRmusfBMGKItHkpkYDrYHod6+nJ6TTFSQ==",
+      "dependencies": [
+        "@spectrum-web-components/asset",
+        "@spectrum-web-components/base",
+        "@spectrum-web-components/checkbox",
+        "@spectrum-web-components/divider",
+        "@spectrum-web-components/icons-workflow",
+        "@spectrum-web-components/popover",
+        "@spectrum-web-components/shared",
+        "@spectrum-web-components/styles"
+      ]
+    },
+    "@spectrum-web-components/checkbox@1.12.4": {
+      "integrity": "sha512-sYEmO6j7nH8jYacD60jm22VDkxDtysqAhuFHaPuTKafTULYw5YYsGd6S2UAJ+BqZSyuTG7Ve2YBPBcOxZqkpzw==",
+      "dependencies": [
+        "@spectrum-web-components/base",
+        "@spectrum-web-components/icon",
+        "@spectrum-web-components/icons-ui",
+        "@spectrum-web-components/shared"
+      ]
+    },
+    "@spectrum-web-components/clear-button@1.12.4": {
+      "integrity": "sha512-NBgLIlF3ORYupsIFsMeiLB7Koizh1E5abBHX5wk8ay6jNB2mYwAAvPrZfipVZ/wzlk+QemT50RKnA4YXDY0CBw==",
+      "dependencies": [
+        "@spectrum-web-components/base"
+      ]
+    },
+    "@spectrum-web-components/close-button@1.12.4": {
+      "integrity": "sha512-KoGmt1PTri7amfHYcbqu/4D1AfAgAN8pzAGQqbzX9cMraWPszjXpkO0b1KRTkpDKpDqkDHSPLHNDrbVnNOoiJw==",
+      "dependencies": [
+        "@spectrum-web-components/base"
+      ]
+    },
+    "@spectrum-web-components/dialog@1.12.4": {
+      "integrity": "sha512-HP/CPu/LrQV6v1bILXUmAHGTRMn3Hs15XPE+aRG35aVPIcGUIqlS14Ung2mtWKX+5k11J+cv2YEEf9lH8t5jbA==",
+      "dependencies": [
+        "@spectrum-web-components/alert-dialog",
+        "@spectrum-web-components/base",
+        "@spectrum-web-components/button",
+        "@spectrum-web-components/button-group",
+        "@spectrum-web-components/divider",
+        "@spectrum-web-components/icons-workflow",
+        "@spectrum-web-components/modal",
+        "@spectrum-web-components/shared",
+        "@spectrum-web-components/underlay"
+      ]
+    },
+    "@spectrum-web-components/divider@1.12.4": {
+      "integrity": "sha512-HhwKciCXSMSC9oLa6XCr8It/CiEunWjcKNMYACX2S8IkXz5bt94+M/5pHvISjup7IagrIYRoQ8qrM1cyZ4eqfw==",
+      "dependencies": [
+        "@spectrum-web-components/base"
+      ]
+    },
+    "@spectrum-web-components/field-label@1.12.4": {
+      "integrity": "sha512-CYyZ2P8UL6YjyNNSJEPYc4RKHnRa9TeI+MQxUPD+zJ799kBTjjThpqwqdPot894JZsrgVeeNP+MXIWn5WwldzA==",
+      "dependencies": [
+        "@spectrum-web-components/base",
+        "@spectrum-web-components/icon",
+        "@spectrum-web-components/icons-ui",
+        "@spectrum-web-components/reactive-controllers",
+        "@spectrum-web-components/shared"
+      ]
+    },
+    "@spectrum-web-components/help-text@1.12.4": {
+      "integrity": "sha512-Xf6GirD2AWfhhrxNY6cduK9OebcqMvA14hq27uRtk+mIh58kGEKzYL2Ek3SP6Qy4DJSJtYON1zjyWnE0k2lhWQ==",
+      "dependencies": [
+        "@spectrum-web-components/base",
+        "@spectrum-web-components/icons-workflow",
+        "@spectrum-web-components/shared"
+      ]
+    },
+    "@spectrum-web-components/icon@1.12.4": {
+      "integrity": "sha512-M0HIWX8YZ6Xrr9Jvio1JC3Rbv28YI+w25F2UmuQgON4MZpiwOYd1RwQXUb+SVjuSqDJgda6LNG4xmaQDbf+1Iw==",
+      "dependencies": [
+        "@spectrum-web-components/base",
+        "@spectrum-web-components/iconset",
+        "@spectrum-web-components/reactive-controllers"
+      ]
+    },
+    "@spectrum-web-components/icons-ui@1.12.4": {
+      "integrity": "sha512-AH7s3mfAPGdv1z4kFTpgIO01r0KtqLneit6pLNe74x4IyE9UqROnqlk1zv6FRuy90luGGLuUHjAUqAGSlGnr0Q==",
+      "dependencies": [
+        "@spectrum-web-components/base",
+        "@spectrum-web-components/icon",
+        "@spectrum-web-components/iconset"
+      ]
+    },
+    "@spectrum-web-components/icons-workflow@1.12.4": {
+      "integrity": "sha512-V1ej7/y1uHzlv7uxdm4JkJJhAQlcOhKfc94BRXx8qpRHqsRR87f634KwP5h1h2DaB+uV8p952GP2JvHiqP+TzQ==",
+      "dependencies": [
+        "@spectrum-web-components/base",
+        "@spectrum-web-components/icon"
+      ]
+    },
+    "@spectrum-web-components/iconset@1.12.4": {
+      "integrity": "sha512-3enya3/rmDukj2IsgTmXQH4d/YE3q+QKtyRIibZ10u2c5/xKYHREceWE4WjzDFUBcKK56yuJVN25ErtgyJ1ePw==",
+      "dependencies": [
+        "@spectrum-web-components/base"
+      ]
+    },
+    "@spectrum-web-components/menu@1.12.4": {
+      "integrity": "sha512-7HsS8BMpMYmWbZxAjzMREjBkllhQcw0iT17P/jIAVStW+5tXAa6/Vv8633+sojCp+FvadZkPxl3qBJsnCeU4mg==",
+      "dependencies": [
+        "@lit-labs/observers",
+        "@spectrum-web-components/action-button",
+        "@spectrum-web-components/base",
+        "@spectrum-web-components/divider",
+        "@spectrum-web-components/icon",
+        "@spectrum-web-components/icons-ui",
+        "@spectrum-web-components/overlay",
+        "@spectrum-web-components/popover",
+        "@spectrum-web-components/reactive-controllers",
+        "@spectrum-web-components/shared"
+      ]
+    },
+    "@spectrum-web-components/modal@1.12.4": {
+      "integrity": "sha512-Kbnkq6eXDxJtbvLxxDo8q2kCEdBHuXkYWNu82Wgm5Q8nCEjoN4Nd8J34JAE0oepnftviojO6gDS/Oi1L/RFO/Q==",
+      "dependencies": [
+        "@spectrum-web-components/base"
+      ]
+    },
+    "@spectrum-web-components/overlay@1.12.4": {
+      "integrity": "sha512-0DEd6kai7v6J35ExWacCbuN4SQzOLpwz3Bc1cnlXX+twKGpFzo9U7XROCHu6rzNzs486YQBLC/mWcI9PXq+ZMw==",
+      "dependencies": [
+        "@floating-ui/dom",
+        "@floating-ui/utils@0.2.10",
+        "@spectrum-web-components/action-button",
+        "@spectrum-web-components/base",
+        "@spectrum-web-components/reactive-controllers",
+        "@spectrum-web-components/shared",
+        "@spectrum-web-components/theme",
+        "focus-trap"
+      ]
+    },
+    "@spectrum-web-components/picker@1.12.4": {
+      "integrity": "sha512-zxIjFwzOANTpkrK1alUqeJr/FfckORLa3p+gjRLVuUr8zWWqP3RVipCNXzFz+EPDig/TmjNg2sHJLT/sFeiY+A==",
+      "dependencies": [
+        "@spectrum-web-components/base",
+        "@spectrum-web-components/button",
+        "@spectrum-web-components/field-label",
+        "@spectrum-web-components/icon",
+        "@spectrum-web-components/icons-ui",
+        "@spectrum-web-components/icons-workflow",
+        "@spectrum-web-components/menu",
+        "@spectrum-web-components/overlay",
+        "@spectrum-web-components/popover",
+        "@spectrum-web-components/progress-circle",
+        "@spectrum-web-components/reactive-controllers",
+        "@spectrum-web-components/shared",
+        "@spectrum-web-components/tooltip",
+        "@spectrum-web-components/tray"
+      ]
+    },
+    "@spectrum-web-components/popover@1.12.4": {
+      "integrity": "sha512-dsV1zq2jFQcBameHa17u2YyoPUJQRpGtvTyg1Ne2IL+wI/0Jspmzlvjw+vNf9ULHGwn8ZeXPRIaYC5CXVQ/MAg==",
+      "dependencies": [
+        "@spectrum-web-components/base",
+        "@spectrum-web-components/overlay"
+      ]
+    },
+    "@spectrum-web-components/progress-circle@1.12.4": {
+      "integrity": "sha512-tIRe14q5o16hAQ9NR3Zzqq7BeYpkiR7+hkAzsyE+p33uivn9PD+2j5gt+yGR/qYKWdfruLFUz2znkGELJggnpQ==",
+      "dependencies": [
+        "@spectrum-web-components/base",
+        "@spectrum-web-components/reactive-controllers",
+        "@spectrum-web-components/shared"
+      ]
+    },
+    "@spectrum-web-components/reactive-controllers@1.12.4": {
+      "integrity": "sha512-9KKcpbdPR+E9fsq0wtF2R7GbPmG2vdgyPAj/76f8+ytT3Rq64w8p7qb24MdzhopJwfDe326Nw6lTKh2M8P0OYQ==",
+      "dependencies": [
+        "@spectrum-web-components/progress-circle",
+        "colorjs.io",
+        "lit"
+      ]
+    },
+    "@spectrum-web-components/shared@1.12.4": {
+      "integrity": "sha512-MvEppFwQMCCWohvogl5vswzW2R5Vf91HZGYd1SOsOFCoFMMy0yFcc/xNNwxS3bZ+NRZ9YGILjZmw+FLQATQXXA==",
+      "dependencies": [
+        "@lit-labs/observers",
+        "@spectrum-web-components/base",
+        "focus-visible"
+      ]
+    },
+    "@spectrum-web-components/styles@1.12.4": {
+      "integrity": "sha512-RudQr/zRZNpyypYc/KadebvXTDqkHUKbHjQCH+F4+YmyAj0o3nD0BlFGQhhf1nRoQhjjwdA7L/EVSnFY9n7G/g==",
+      "dependencies": [
+        "@spectrum-web-components/base",
+        "lit"
+      ]
+    },
+    "@spectrum-web-components/textfield@1.12.4": {
+      "integrity": "sha512-q7z9cwTSihow3dWTIZSyjq8SSlHOWCK1Efu/tMwAoh7OyrFvb7FIB2AEThO1YnyzedXZkRiZ+Q5udq2G5L8r8A==",
+      "dependencies": [
+        "@spectrum-web-components/base",
+        "@spectrum-web-components/help-text",
+        "@spectrum-web-components/icon",
+        "@spectrum-web-components/icons-ui",
+        "@spectrum-web-components/icons-workflow",
+        "@spectrum-web-components/overlay",
+        "@spectrum-web-components/shared",
+        "@spectrum-web-components/tooltip"
+      ]
+    },
+    "@spectrum-web-components/theme@1.12.4": {
+      "integrity": "sha512-vNdZuxk66Yif+Yt1VrK6DG56dsnm5n4IPmkPNMeOYY1rjT+hfKNaCUoHJFQYt+ZLkC6bC/eUvrG69if9xMscYw==",
+      "dependencies": [
+        "@spectrum-web-components/base",
+        "@spectrum-web-components/styles"
+      ]
+    },
+    "@spectrum-web-components/tooltip@1.12.4": {
+      "integrity": "sha512-GwMooNIsUWU9ynjFmVHNazVdmKfXPLpADNyRn+iXe5upIcwYavpUFEzy3lkP3XshJXMzC46A/IkqX8jKgsEioQ==",
+      "dependencies": [
+        "@spectrum-web-components/base",
+        "@spectrum-web-components/overlay",
+        "@spectrum-web-components/reactive-controllers",
+        "@spectrum-web-components/shared"
+      ]
+    },
+    "@spectrum-web-components/tray@1.12.4": {
+      "integrity": "sha512-1cfTOHQNNzth5YSQ+pipzBkiKHTWKDJnE7D4/HcpfPC5+HcuG8pk62wuMZjcGgPn9S/6jI6DECU4NjuMEVzUUw==",
+      "dependencies": [
+        "@spectrum-web-components/base",
+        "@spectrum-web-components/modal",
+        "@spectrum-web-components/reactive-controllers",
+        "@spectrum-web-components/shared",
+        "@spectrum-web-components/underlay"
+      ]
+    },
+    "@spectrum-web-components/underlay@1.12.4": {
+      "integrity": "sha512-6VmvseI/yB9DEWgaczhYSugqGXRVYVieTR1HTrk4C+OQrDNEDHBG9DmNPV0cu/+hzttSIhKkCthAPGwMLfnjjQ==",
+      "dependencies": [
+        "@spectrum-web-components/base"
+      ]
+    },
+    "@types/trusted-types@2.0.7": {
+      "integrity": "sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw=="
+    },
+    "colorjs.io@0.5.2": {
+      "integrity": "sha512-twmVoizEW7ylZSN32OgKdXRmo1qg+wT5/6C3xu5b9QsWzSFAhHLn2xd8ro0diCsKfCj1RdaTP/nrcW+vAoQPIw=="
+    },
+    "focus-trap@7.6.5": {
+      "integrity": "sha512-7Ke1jyybbbPZyZXFxEftUtxFGLMpE2n6A+z//m4CRDlj0hW+o3iYSmh8nFlYMurOiJVDmJRilUQtJr08KfIxlg==",
+      "dependencies": [
+        "tabbable"
+      ]
+    },
+    "focus-visible@5.2.1": {
+      "integrity": "sha512-8Bx950VD1bWTQJEH/AM6SpEk+SU55aVnp4Ujhuuxy3eMEBCRwBnTBnVXr9YAPvZL3/CNjCa8u4IWfNmEO53whA=="
+    },
+    "lit-element@4.2.2": {
+      "integrity": "sha512-aFKhNToWxoyhkNDmWZwEva2SlQia+jfG0fjIWV//YeTaWrVnOxD89dPKfigCUspXFmjzOEUQpOkejH5Ly6sG0w==",
+      "dependencies": [
+        "@lit-labs/ssr-dom-shim",
+        "@lit/reactive-element",
+        "lit-html"
+      ]
+    },
+    "lit-html@3.3.3": {
+      "integrity": "sha512-el8M6jK2o3RXBnrSHX3ZKrsN8zEV63pSExTO1wYJz7QndGYZ8353e2a5PPX+qHe2aGayfnchQmkAojaWAREOIA==",
+      "dependencies": [
+        "@types/trusted-types"
+      ]
+    },
+    "lit@3.3.3": {
+      "integrity": "sha512-fycuvZg/hkpozL00lm1pEJH5nN/lr9ZXd6mJI2HSN4+Bzc+LDNdEApJ6HFbPkdFNHLvOplIIuJvxkS4XUxqirw==",
+      "dependencies": [
+        "@lit/reactive-element",
+        "lit-element",
+        "lit-html"
+      ]
+    },
+    "tabbable@6.5.0": {
+      "integrity": "sha512-wieBHXygIm7OyQOu5hQlkk62/WyCFYGlWg7L6/ZCUZwx0o398Zkn4pVmMyfYhfMG8kGrj/Krt8eIk6UKC6VzwA=="
+    }
+  },
+  "workspace": {
+    "dependencies": [
+      "npm:@spectrum-web-components/button@1.12.4",
+      "npm:@spectrum-web-components/card@1.12.4",
+      "npm:@spectrum-web-components/dialog@1.12.4",
+      "npm:@spectrum-web-components/picker@1.12.4",
+      "npm:@spectrum-web-components/textfield@1.12.4",
+      "npm:@spectrum-web-components/theme@1.12.4",
+      "npm:lit@^3.3.3"
+    ]
+  }
+}

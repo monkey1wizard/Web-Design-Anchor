@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    name: cargo test
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Verify Deno
+        run: deno --version
+      - name: Verify Git
+        run: git --version
+      - name: Configure git identity
+        run: |
+          git config --global user.name "WDA CI"
+          git config --global user.email "wda-ci@localhost"
+      - name: Run cargo test
+        run: cargo test
+
+  ignored-probes:
+    name: cargo test -- --ignored
+    runs-on: ${{ matrix.os }}
+    continue-on-error: true
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Verify Deno
+        run: deno --version
+      - name: Run cargo test -- --ignored
+        run: cargo test -- --ignored
