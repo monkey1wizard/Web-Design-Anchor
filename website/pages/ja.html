@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    (function () {
+      var root = document.documentElement;
+      root.setAttribute("data-js", "");
+      var languageKey = "wda-website-language";
+      document.addEventListener("click", function (event) {
+        var target = event.target;
+        var link = target && target.closest ? target.closest(".lang-switch__item[hreflang]") : null;
+        if (!link) return;
+        var selectedLanguage = link.getAttribute("hreflang");
+        if (selectedLanguage !== "en-US" && selectedLanguage !== "zh-TW" && selectedLanguage !== "ja") return;
+        try {
+          localStorage.setItem(languageKey, selectedLanguage);
+        } catch (error) {}
+      }, true);
+      try {
+        var mode = localStorage.getItem("wda-website-color-mode");
+        if (mode === "light" || mode === "dark") root.setAttribute("data-theme", mode);
+      } catch (error) {}
+    })();
+  </script>
+  <title>Web Design Anchor｜AIで保守しやすいウェブサイトを作る</title>
+  <meta name="description" content="AIでウェブサイトを作り、デザインの決定をプロジェクトに残せます。WDAは、Claude CodeやCodexなど、パソコン上でコマンドを実行できるAIコーディングツールと一緒に使います。GitとDenoのインストールが必要です。">
+  <link rel="canonical" href="https://monkey1wizard.github.io/Web-Design-Anchor/ja.html">
+  <link rel="alternate" hreflang="zh-TW" href="https://monkey1wizard.github.io/Web-Design-Anchor/zh-TW.html">
+  <link rel="alternate" hreflang="en-US" href="https://monkey1wizard.github.io/Web-Design-Anchor/">
+  <link rel="alternate" hreflang="ja" href="https://monkey1wizard.github.io/Web-Design-Anchor/ja.html">
+  <link rel="alternate" hreflang="x-default" href="https://monkey1wizard.github.io/Web-Design-Anchor/">
+  <link rel="stylesheet" href="styles/tokens.css">
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+  <header class="top-bar">
+    <div class="container top-bar__inner">
+      <details class="lang-switch">
+        <summary class="utility-button utility-button--icon" aria-label="言語：日本語">
+          <svg class="utility-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="7.25"/><ellipse cx="10" cy="10" rx="3" ry="7.25"/><path d="M2.75 10h14.5M4.2 6.25c3.4 1.3 7.2 1.3 11.6 0M4.2 13.75c3.4-1.3 7.2-1.3 11.6 0"/></svg>
+          <span class="visually-hidden">言語：日本語</span>
+        </summary>
+        <ul class="lang-switch__menu">
+          <li><a class="lang-switch__item" href="index.html" hreflang="en-US" lang="en-US"><span>English</span><svg class="utility-icon lang-switch__check" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></svg></a></li>
+          <li><a class="lang-switch__item" href="ja.html" hreflang="ja" lang="ja" aria-current="page"><span>日本語</span><svg class="utility-icon lang-switch__check" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></svg></a></li>
+          <li><a class="lang-switch__item" href="zh-TW.html" hreflang="zh-TW" lang="zh-TW"><span>繁體中文</span><svg class="utility-icon lang-switch__check" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></svg></a></li>
+        </ul>
+      </details>
+      <fieldset class="color-mode">
+        <legend class="visually-hidden">カラーモード</legend>
+        <label class="color-mode__option">
+          <input class="visually-hidden" type="radio" name="color-mode" value="light">
+          <svg class="utility-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="3.25"/><path d="M10 2.5v1.75M10 15.75v1.75M2.5 10h1.75M15.75 10h1.75M4.7 4.7l1.24 1.24M14.06 14.06l1.24 1.24M4.7 15.3l1.24-1.24M14.06 5.94l1.24-1.24"/></svg>
+          <span class="visually-hidden">ライトモード</span>
+          <span class="color-mode__tip" aria-hidden="true">ライト</span>
+        </label>
+        <label class="color-mode__option">
+          <input class="visually-hidden" type="radio" name="color-mode" value="dark">
+          <svg class="utility-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M16.5 12.2A6.75 6.75 0 0 1 7.8 3.5a6.75 6.75 0 1 0 8.7 8.7z"/></svg>
+          <span class="visually-hidden">ダークモード</span>
+          <span class="color-mode__tip" aria-hidden="true">ダーク</span>
+        </label>
+        <label class="color-mode__option">
+          <input class="visually-hidden" type="radio" name="color-mode" value="system" checked>
+          <svg class="utility-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="2.75" y="3.75" width="14.5" height="10" rx="1.5"/><path d="M7 17.25h6M10 13.75v3.5"/></svg>
+          <span class="visually-hidden">システム設定に合わせる</span>
+          <span class="color-mode__tip" aria-hidden="true">システム</span>
+        </label>
+      </fieldset>
+      <a class="utility-button utility-button--icon" href="https://github.com/monkey1wizard/Web-Design-Anchor">
+        <svg class="utility-icon utility-icon--solid" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></svg>
+        <span class="visually-hidden">GitHub 上の WDA ソースコード</span>
+      </a>
+    </div>
+  </header>
+
+  <sp-theme system="spectrum-two" scale="medium">
+    <script>
+      (function () {
+        var theme = document.currentScript.parentElement;
+        try {
+          var mode = document.documentElement.getAttribute("data-theme");
+          if (mode !== "light" && mode !== "dark") {
+            mode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+          }
+          theme.setAttribute("color", mode);
+        } catch (error) {
+          theme.setAttribute("color", "light");
+        }
+      })();
+    </script>
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="container hero__inner">
+          <div class="hero__text">
+            <h1 class="hero__title" id="hero-title">Web Design Anchor</h1>
+            <p class="hero__sub">AIでウェブサイトを作り、デザインの決定はプロジェクトに残す。</p>
+          </div>
+          <nav class="toc" aria-label="このページで答える5つの質問">
+            <ol>
+              <li><a href="#no-code"><svg class="toc__icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M8 5l5 5-5 5"/></svg>コードを書けなくても使えますか？</a></li>
+              <li><a href="#files"><svg class="toc__icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M8 5l5 5-5 5"/></svg>プロジェクトには何がありますか？</a></li>
+              <li><a href="#dist"><svg class="toc__icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M8 5l5 5-5 5"/></svg>wda build で何が作られますか？</a></li>
+              <li><a href="#no-lock-in"><svg class="toc__icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M8 5l5 5-5 5"/></svg>WDA がなくてもサイトは動きますか？</a></li>
+              <li><a href="#install"><svg class="toc__icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M8 5l5 5-5 5"/></svg>始めるには？</a></li>
+            </ol>
+          </nav>
+        </div>
+      </section>
+
+      <section class="q" id="no-code" aria-labelledby="no-code-title">
+        <div class="container q__split">
+          <div class="q__head">
+            <h2 class="q__title" id="no-code-title">コードを書けなくても使えますか？</h2>
+            <p class="q__answer">はい。Claude CodeやCodexなど、パソコン上でコマンドを実行できるAIコーディングツールを使い、GitとDenoをインストールしていれば使えます。コードを自分で書く必要はありません。</p>
+            <p class="q__answer">生成されるプロジェクトでは、ページ、スタイル、デザイン規則の置き場所が整理されています。コンテンツだけでなく、色や文字のスタイルも一か所で調整できます。</p>
+          </div>
+          <ol class="chat" aria-label="会話の例">
+            <li class="chat__turn">
+              <p class="chat__who">Designer（例）</p>
+              <p class="chat__say chat__say--you">見出しを大きくして、ダークモードでも読みやすくしてください。</p>
+            </li>
+            <li class="chat__turn">
+              <p class="chat__who">AI（例）</p>
+              <p class="chat__say">docs/design.md を確認し、styles/main.css と tokens/tokens.json を更新してから wda build を実行しました。ビルドに成功しました。</p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="q" id="files" aria-labelledby="files-title">
+        <div class="container q__split">
+          <div class="q__head">
+            <h2 class="q__title" id="files-title">プロジェクトには何がありますか？</h2>
+            <p class="q__answer">プロジェクトフォルダーには、あなたとAIコーディングツールがサイトを保守するためのファイルが入っています。ページ、スタイル、デザイントークン、コード、プロジェクト文書です。</p>
+            <p class="q__answer">デザインは文書で管理します。docs/design.md には、デザインシステム、アクセシビリティ基準、ビジュアルレビュー基準、デザイン方針を記録します。AIはこの文書をもとに画面を確認し、継続して適用する決定をファイルに書き戻せます。デザイン規則がチャット履歴に埋もれず、プロジェクトに残ります。最終的な画面はご自身で確認してください。</p>
+          </div>
+          <ul class="dtree" aria-label="開発フォルダーの構成">
+            <li class="dtree__item">
+              <span class="dtree__row"><svg class="ficon ficon--folder" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2.5 5.5a1.5 1.5 0 0 1 1.5-1.5h3.6l1.8 2h6.6a1.5 1.5 0 0 1 1.5 1.5v7.5a1.5 1.5 0 0 1-1.5 1.5H4a1.5 1.5 0 0 1-1.5-1.5z"/></svg><span class="dtree__name">website/</span></span>
+              <ul>
+                <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--folder" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2.5 5.5a1.5 1.5 0 0 1 1.5-1.5h3.6l1.8 2h6.6a1.5 1.5 0 0 1 1.5 1.5v7.5a1.5 1.5 0 0 1-1.5 1.5H4a1.5 1.5 0 0 1-1.5-1.5z"/></svg><span class="dtree__name">pages/</span><span class="dtree__note">ページの入口</span></span>
+                  <ul>
+                    <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--html" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path class="ficon__mark" d="M8.5 10.5l-1.5 1.5 1.5 1.5M11.5 10.5l1.5 1.5-1.5 1.5"/></svg><span class="dtree__name">index.html</span></span></li>
+                    <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--html" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path class="ficon__mark" d="M8.5 10.5l-1.5 1.5 1.5 1.5M11.5 10.5l1.5 1.5-1.5 1.5"/></svg><span class="dtree__name">zh-TW.html</span></span></li>
+                    <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--html" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path class="ficon__mark" d="M8.5 10.5l-1.5 1.5 1.5 1.5M11.5 10.5l1.5 1.5-1.5 1.5"/></svg><span class="dtree__name">ja.html</span></span></li>
+                  </ul>
+                </li>
+                <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--folder" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2.5 5.5a1.5 1.5 0 0 1 1.5-1.5h3.6l1.8 2h6.6a1.5 1.5 0 0 1 1.5 1.5v7.5a1.5 1.5 0 0 1-1.5 1.5H4a1.5 1.5 0 0 1-1.5-1.5z"/></svg><span class="dtree__name">styles/</span><span class="dtree__note">スタイルシート</span></span></li>
+                <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--folder" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2.5 5.5a1.5 1.5 0 0 1 1.5-1.5h3.6l1.8 2h6.6a1.5 1.5 0 0 1 1.5 1.5v7.5a1.5 1.5 0 0 1-1.5 1.5H4a1.5 1.5 0 0 1-1.5-1.5z"/></svg><span class="dtree__name">tokens/</span><span class="dtree__note">デザイントークン：色、文字サイズ、余白などのデザイン値</span></span></li>
+                <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--folder" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2.5 5.5a1.5 1.5 0 0 1 1.5-1.5h3.6l1.8 2h6.6a1.5 1.5 0 0 1 1.5 1.5v7.5a1.5 1.5 0 0 1-1.5 1.5H4a1.5 1.5 0 0 1-1.5-1.5z"/></svg><span class="dtree__name">scripts/</span><span class="dtree__note">TypeScript コード</span></span></li>
+                <li class="dtree__item">
+                  <span class="dtree__row"><svg class="ficon ficon--folder" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2.5 5.5a1.5 1.5 0 0 1 1.5-1.5h3.6l1.8 2h6.6a1.5 1.5 0 0 1 1.5 1.5v7.5a1.5 1.5 0 0 1-1.5 1.5H4a1.5 1.5 0 0 1-1.5-1.5z"/></svg><span class="dtree__name">docs/</span><span class="dtree__note">プロジェクト文書</span></span>
+                  <ul>
+                    <li class="dtree__item dtree__item--key"><span class="dtree__row"><svg class="ficon ficon--file" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/></svg><span class="dtree__name">design.md</span><span class="dtree__note">AIが画面を判断するためのデザイン規則</span></span></li>
+                  </ul>
+                </li>
+                <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--file" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/></svg><span class="dtree__name">wda.json</span><span class="dtree__note">プロジェクト名、技術基準、デザインシステム、WDAのバージョン</span></span></li>
+                <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--file" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/></svg><span class="dtree__name">README.md</span><span class="dtree__note">プロジェクトの概要</span></span></li>
+                <li class="dtree__item dtree__item--deploy"><span class="dtree__row"><svg class="ficon ficon--folder" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2.5 5.5a1.5 1.5 0 0 1 1.5-1.5h3.6l1.8 2h6.6a1.5 1.5 0 0 1 1.5 1.5v7.5a1.5 1.5 0 0 1-1.5 1.5H4a1.5 1.5 0 0 1-1.5-1.5z"/></svg><span class="dtree__name">dist/</span><span class="dtree__note">wda build が作成するデプロイ用ファイル</span></span></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="q" id="dist" aria-labelledby="dist-title">
+        <div class="container q__split">
+          <div class="q__head">
+            <h2 class="q__title" id="dist-title">wda build で何が作られますか？</h2>
+            <p class="q__answer">WDAのビルドコマンドは、通常AIがファイルを更新した後に実行します。自分で実行することもできます。最初にプロジェクトを検査し、エラーがあれば停止して dist/ は変更しません。検査に合格した後で dist/ を作成します。</p>
+            <p class="q__answer">dist/ はデプロイ用です。wda build を実行するたびにフォルダー全体が作り直されるため、手動で編集しないでください。</p>
+          </div>
+          <ul class="dtree" aria-label="dist/ 内のファイルとサイズ" data-replay>
+            <li class="dtree__item">
+              <span class="dtree__row"><svg class="ficon ficon--folder" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2.5 5.5a1.5 1.5 0 0 1 1.5-1.5h3.6l1.8 2h6.6a1.5 1.5 0 0 1 1.5 1.5v7.5a1.5 1.5 0 0 1-1.5 1.5H4a1.5 1.5 0 0 1-1.5-1.5z"/></svg><span class="dtree__name">dist/</span></span>
+              <ul>
+                <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--html" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path class="ficon__mark" d="M8.5 10.5l-1.5 1.5 1.5 1.5M11.5 10.5l1.5 1.5-1.5 1.5"/></svg><span class="dtree__name">index.html</span><span class="dtree__size">28 KiB</span></span></li>
+                <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--html" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path class="ficon__mark" d="M8.5 10.5l-1.5 1.5 1.5 1.5M11.5 10.5l1.5 1.5-1.5 1.5"/></svg><span class="dtree__name">zh-TW.html</span><span class="dtree__size">27 KiB</span></span></li>
+                <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--html" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path class="ficon__mark" d="M8.5 10.5l-1.5 1.5 1.5 1.5M11.5 10.5l1.5 1.5-1.5 1.5"/></svg><span class="dtree__name">ja.html</span><span class="dtree__size">28 KiB</span></span></li>
+                <li class="dtree__item">
+                  <span class="dtree__row"><svg class="ficon ficon--folder" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2.5 5.5a1.5 1.5 0 0 1 1.5-1.5h3.6l1.8 2h6.6a1.5 1.5 0 0 1 1.5 1.5v7.5a1.5 1.5 0 0 1-1.5 1.5H4a1.5 1.5 0 0 1-1.5-1.5z"/></svg><span class="dtree__name">styles/</span></span>
+                  <ul>
+                    <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--css" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path class="ficon__mark" d="M9 10.5l-1.5 1.5L9 13.5M11 10.5l1.5 1.5-1.5 1.5"/></svg><span class="dtree__name">main.css</span><span class="dtree__size">24 KiB</span></span></li>
+                    <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--css" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path class="ficon__mark" d="M9 10.5l-1.5 1.5L9 13.5M11 10.5l1.5 1.5-1.5 1.5"/></svg><span class="dtree__name">tokens.css</span><span class="dtree__size">2 KiB</span></span></li>
+                  </ul>
+                </li>
+                <li class="dtree__item">
+                  <span class="dtree__row"><svg class="ficon ficon--folder" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2.5 5.5a1.5 1.5 0 0 1 1.5-1.5h3.6l1.8 2h6.6a1.5 1.5 0 0 1 1.5 1.5v7.5a1.5 1.5 0 0 1-1.5 1.5H4a1.5 1.5 0 0 1-1.5-1.5z"/></svg><span class="dtree__name">scripts/</span></span>
+                  <ul>
+                    <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--js" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path class="ficon__mark" d="M8.5 10.5l-1.5 1.5 1.5 1.5M11.5 10.5l1.5 1.5-1.5 1.5"/></svg><span class="dtree__name">main.js</span><span class="dtree__size">411 KiB</span></span></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="q" id="no-lock-in" aria-labelledby="no-lock-in-title">
+        <div class="container q__split">
+          <div class="q__head">
+            <h2 class="q__title" id="no-lock-in-title">WDA がなくてもサイトは動きますか？</h2>
+            <p class="q__answer">はい。WDAはプロジェクトの作成とビルドに使いますが、サイトの実行には必要ありません。dist/ のファイルはどの静的ホストでも動作します。</p>
+          </div>
+          <pre class="term" aria-label="wda build の出力" data-replay><span class="term__line term__line--cmd">$ wda build</span><span class="term__line">Build succeeded.</span><span class="term__line">Output: &lt;project&gt;/dist</span><span class="term__line term__dim">HTTP server required; opening via file:// will not work.</span></pre>
+        </div>
+      </section>
+
+      <section class="q q--install" id="install" aria-labelledby="install-title">
+        <div class="container">
+          <div class="q__head">
+            <h2 class="q__title" id="install-title">始めるには？</h2>
+            <p class="q__answer">まず Git と Deno を用意してください。Node.js は不要です。次にインストール方法を選びます。</p>
+          </div>
+          <div class="routes__group">
+            <h3 class="routes__os">macOS と Linux</h3>
+            <dl class="routes">
+              <div class="routes__row"><dt>Homebrew</dt><dd class="routes__cmd"><div class="cmd"><code class="cmd__text">brew install monkey1wizard/tap/wda</code><button class="cmd__copy" type="button"><svg class="cmd__icon cmd__icon--copy" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="7" y="7" width="9.5" height="9.5" rx="2"/><path d="M13 4.5V4.5A1.5 1.5 0 0 0 11.5 3H5A2 2 0 0 0 3 5v6.5A1.5 1.5 0 0 0 4.5 13"/></svg><svg class="cmd__icon cmd__icon--done" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></svg><span class="visually-hidden">Homebrew コマンドをコピー</span></button></div></dd></div>
+              <div class="routes__row"><dt>ターミナルで実行</dt><dd class="routes__cmd"><div class="cmd"><code class="cmd__text">curl -fsSL https://raw.githubusercontent.com/monkey1wizard/web-design-anchor/main/packaging/install.sh | bash</code><button class="cmd__copy" type="button"><svg class="cmd__icon cmd__icon--copy" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="7" y="7" width="9.5" height="9.5" rx="2"/><path d="M13 4.5V4.5A1.5 1.5 0 0 0 11.5 3H5A2 2 0 0 0 3 5v6.5A1.5 1.5 0 0 0 4.5 13"/></svg><svg class="cmd__icon cmd__icon--done" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></svg><span class="visually-hidden">macOS と Linux 用インストーラーのコマンドをコピー</span></button></div></dd></div>
+            </dl>
+          </div>
+          <div class="routes__group">
+            <h3 class="routes__os">Windows</h3>
+            <dl class="routes">
+              <div class="routes__row"><dt>PowerShell で実行</dt><dd class="routes__cmd"><div class="cmd"><code class="cmd__text">irm https://raw.githubusercontent.com/monkey1wizard/web-design-anchor/main/packaging/install.ps1 | iex</code><button class="cmd__copy" type="button"><svg class="cmd__icon cmd__icon--copy" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="7" y="7" width="9.5" height="9.5" rx="2"/><path d="M13 4.5V4.5A1.5 1.5 0 0 0 11.5 3H5A2 2 0 0 0 3 5v6.5A1.5 1.5 0 0 0 4.5 13"/></svg><svg class="cmd__icon cmd__icon--done" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></svg><span class="visually-hidden">Windows 用インストーラーのコマンドをコピー</span></button></div></dd></div>
+              <div class="routes__row routes__row--pending"><dt>WinGet <span class="routes__status">準備中</span></dt><dd class="routes__cmd"><div class="cmd cmd--pending"><code class="cmd__text">winget install Monkey1Wizard.WDA</code></div></dd></div>
+            </dl>
+          </div>
+          <div class="routes__group">
+            <h3 class="routes__os">Rust をインストール済みの場合</h3>
+            <dl class="routes">
+              <div class="routes__row"><dt>Cargo</dt><dd class="routes__cmd"><div class="cmd"><code class="cmd__text">cargo install --git https://github.com/monkey1wizard/Web-Design-Anchor --locked</code><button class="cmd__copy" type="button"><svg class="cmd__icon cmd__icon--copy" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="7" y="7" width="9.5" height="9.5" rx="2"/><path d="M13 4.5V4.5A1.5 1.5 0 0 0 11.5 3H5A2 2 0 0 0 3 5v6.5A1.5 1.5 0 0 0 4.5 13"/></svg><svg class="cmd__icon cmd__icon--done" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></svg><span class="visually-hidden">Cargo コマンドをコピー</span></button></div></dd></div>
+            </dl>
+          </div>
+          <div class="routes__group">
+            <h3 class="routes__os">インストール後</h3>
+            <dl class="routes">
+              <div class="routes__row"><dt>バージョンを確認</dt><dd class="routes__cmd"><div class="cmd"><code class="cmd__text">wda --version</code><button class="cmd__copy" type="button"><svg class="cmd__icon cmd__icon--copy" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="7" y="7" width="9.5" height="9.5" rx="2"/><path d="M13 4.5V4.5A1.5 1.5 0 0 0 11.5 3H5A2 2 0 0 0 3 5v6.5A1.5 1.5 0 0 0 4.5 13"/></svg><svg class="cmd__icon cmd__icon--done" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></svg><span class="visually-hidden">バージョン確認コマンドをコピー</span></button></div></dd></div>
+              <div class="routes__row"><dt>新しいプロジェクトを作成</dt><dd class="routes__cmd"><div class="cmd"><code class="cmd__text">wda init</code><button class="cmd__copy" type="button"><svg class="cmd__icon cmd__icon--copy" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="7" y="7" width="9.5" height="9.5" rx="2"/><path d="M13 4.5V4.5A1.5 1.5 0 0 0 11.5 3H5A2 2 0 0 0 3 5v6.5A1.5 1.5 0 0 0 4.5 13"/></svg><svg class="cmd__icon cmd__icon--done" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></svg><span class="visually-hidden">プロジェクト作成コマンドをコピー</span></button></div></dd></div>
+            </dl>
+          </div>
+          <p class="routes__note">新しいプロジェクトを始めるには、空のフォルダーで <code>wda init</code> を実行します。標準のプロジェクト構成と設定ファイルが作成され、AIコーディングツールと開発を始められます。</p>
+          <p class="routes__note">2つのインストーラーは <a href="https://github.com/monkey1wizard/Web-Design-Anchor/releases">GitHub Releases</a> から最新の安定版をダウンロードし、SHA-256 を検証します。リリースを手動でダウンロードすることもできます。</p>
+          <p class="visually-hidden" id="copy-status" role="status" data-success="コピーしました" data-failure="自動コピーできませんでした。コマンドを選択したので、手動でコピーしてください"></p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container site-footer__inner">
+        <div class="site-footer__brand">
+          <p class="site-footer__name">Web Design Anchor</p>
+          <p class="site-footer__text">このページは WDA と Spectrum 2 で構築されています。Spectrum のデザイントークンの値は Adobe Spectrum に由来し、このプロジェクトで変更したうえで Apache-2.0 ライセンスに基づいて使用しています。</p>
+          <p class="site-footer__text">ページのデザインには <a href="https://impeccable.style/">Impeccable</a> スキルを活用しました。</p>
+        </div>
+        <ul class="site-footer__links">
+          <li><a href="https://github.com/monkey1wizard/Web-Design-Anchor">ソースコード</a></li>
+          <li><a href="https://github.com/monkey1wizard/Web-Design-Anchor/blob/main/LICENSE">ライセンス（Apache-2.0）</a></li>
+          <li><a href="https://github.com/monkey1wizard/Web-Design-Anchor/blob/main/SECURITY.md">セキュリティ</a></li>
+        </ul>
+      </div>
+    </footer>
+  </sp-theme>
+
+  <script type="module" src="scripts/main.ts"></script>
+</body>
+</html>

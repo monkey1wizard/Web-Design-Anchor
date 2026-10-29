@@ -1,0 +1,63 @@
+name: CI
+
+# The private source repository does not run CI on push. Release checks run
+# locally before publication, and the public release workflow calls this file
+# before signing. Pull requests and manual dispatch still run everywhere.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: cargo test
+    if: ${{ github.event_name != 'push' || github.repository == 'monkey1wizard/Web-Design-Anchor' }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Set up Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Verify Deno
+        run: deno --version
+      - name: Verify Git
+        run: git --version
+      - name: Configure git identity
+        run: |
+          git config --global user.name "WDA CI"
+          git config --global user.email "wda-ci@localhost"
+      - name: Run cargo test
+        run: cargo test --locked
+
+  ignored-probes:
+    name: cargo test -- --ignored
+    if: ${{ github.event_name != 'push' || github.repository == 'monkey1wizard/Web-Design-Anchor' }}
+    runs-on: ${{ matrix.os }}
+    continue-on-error: true
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Set up Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Verify Deno
+        run: deno --version
+      - name: Run cargo test -- --ignored
+        run: cargo test -- --ignored

@@ -1,0 +1,84 @@
+version: 1
+rules:
+  # Evidence: docs/i18n/zh-TW/glossary.zh-TW.md writes 儲存庫（Repository）.
+  - expected: 儲存庫
+    patterns:
+      - 倉庫
+    specs:
+      - from: 倉庫
+        to: 儲存庫
+  # Evidence: docs/i18n/zh-TW/glossary.zh-TW.md Skill row writes 發布.
+  - expected: 發布
+    patterns:
+      - 發佈
+    specs:
+      - from: 發佈
+        to: 發布
+  # Evidence: repository usage counts are Design System 69 versus 設計系統 2.
+  - expected: Design System
+    patterns:
+      - 設計系統
+    specs:
+      - from: 設計系統
+        to: Design System
+  # Evidence: docs/i18n/zh-TW/architecture.zh-TW.md calls the English file of a translation 正本 (英文正本) in every place.
+  - expected: 英文正本
+    patterns:
+      - 英文原文
+      - /英文正式檔案?/
+    specs:
+      - from: 英文原文
+        to: 英文正本
+      - from: 英文正式檔案
+        to: 英文正本
+  - expected: 正本
+    patterns:
+      - /(?<!英文)正式檔案?/
+    specs:
+      - from: 正式檔案
+        to: 正本
+  # Evidence: docs/i18n/zh-TW/glossary.zh-TW.md writes 權威來源（Canonical Source）. The lookbehind keeps English files out of scope.
+  - expected: 權威來源
+    patterns:
+      - /(?<=[一-鿿]) ?[Cc]anonical (?:[Ss]ource|來源)/
+    specs:
+      - from: 的 canonical source
+        to: 的權威來源
+      - from: 的 Canonical Source
+        to: 的權威來源
+  - expected: 權威
+    patterns:
+      - /(?<=[一-鿿]) ?[Cc]anonical(?! (?:[Ss]ource|來源))/
+    specs:
+      - from: 專案 canonical token
+        to: 專案權威 token
+  # Evidence: docs/i18n/zh-TW/wda-minimal.zh-TW.md writes 離線退回.
+  - expected: 離線退回
+    patterns:
+      - /(?<=[一-鿿]) ?[Oo]ffline [Ff]allback/
+    specs:
+      - from: 來源與 offline fallback
+        to: 來源與離線退回
+      - from: 與 Offline Fallback
+        to: 與離線退回
+  # Evidence: docs/i18n/zh-TW/design-system.zh-TW.md writes the Design System fallback as 退回 in every place.
+  # This rule does not tell fallback kinds apart. Font fallbacks are 備援方式 in docs/i18n/zh-TW/design-system.zh-TW.md, so a future 字型 fallback needs that wording instead.
+  - expected: 退回
+    patterns:
+      - 回退
+      - 後備
+      - /(?<=[一-鿿]) ?[Ff]allback(?! ?(?:[Rr]outing|路由))/
+    specs:
+      - from: 失敗時 fallback
+        to: 失敗時退回
+  # Evidence: docs/i18n/zh-TW/generated-project.zh-TW.md writes 備援路由（fallback routing）.
+  - expected: 備援路由（fallback routing）
+    patterns:
+      - /(?<=[一-鿿、]) ?[Ff]allback ?(?:[Rr]outing|路由)/
+    specs:
+      - from: 與 fallback routing
+        to: 與備援路由（fallback routing）
+      - from: 與 fallback 路由
+        to: 與備援路由（fallback routing）
+      - from: 與 Fallback Routing
+        to: 與備援路由（fallback routing）

@@ -1,0 +1,135 @@
+# Changelog
+
+This file documents all notable changes to WDA. The public repository
+receives a curated snapshot of the private source repository, and this file is
+the authoritative release record for that snapshot.
+
+The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
+and this project adheres to [Semantic Versioning](https://semver.org/).
+
+## [Unreleased]
+
+No unreleased changes.
+
+## [0.1.4] - 2026-10-30
+
+### Added
+
+- Traditional Chinese and Japanese translations of the README, SECURITY, and
+  contract documents in `docs/i18n/zh-TW/` and `docs/i18n/ja/`.
+- English and Japanese pages for the official website. The English,
+  Traditional Chinese, and Japanese routes are `index.html`, `zh-TW.html`,
+  and `ja.html`.
+- First-visit language detection for the official website, with manual
+  language selections taking priority on later visits.
+
+### Changed
+
+- The README, SECURITY, the contract documents in `docs/`, and the WDA Skill
+  are now written in English. English is the canonical version, and the
+  translations name the English file they follow.
+- The README and its translations open with the tagline "Build websites with
+  AI. Keep design decisions in your project."
+- The README states what you need to build a site without writing code: an AI
+  coding tool that can run commands on your computer, such as Claude Code or
+  Codex, and Git and Deno.
+- The README no longer claims that the AI always follows the design rules,
+  that a loaded Skill makes the AI follow the workflow automatically, that
+  `wda check` reports every deviation, or that `dist/` has zero dependencies.
+
+### Fixed
+
+- The README Quick Start ran `wda init my-site`, which the CLI rejects. It now
+  creates and enters a folder and runs `wda init`. The description of the
+  created project now lists `pages/index.html` and `tokens/tokens.json`
+  instead of a root `index.html` and a components directory.
+- The official website lists the languages in the same order on every page.
+
+The `wda` CLI behaves the same as in 0.1.3.
+
+## [0.1.3] - 2026-10-21
+
+### Changed
+
+- The README opens with a short demo animation of the Designer and AI
+  workflow. The conversation in the animation is an example.
+- The WinGet package is still under review, so the README no longer lists
+  `winget install Monkey1Wizard.WDA`. Windows users install with the
+  PowerShell installer.
+- The website marks the WinGet install route as in progress, with a muted
+  command and no copy button.
+
+The `wda` CLI behaves the same as in 0.1.2.
+
+## [0.1.2] - 2026-10-17
+
+### Breaking
+
+- Projects must rename `docs/naming.md` to `docs/glossary.md`. WDA no longer
+  accepts `docs/naming.md` and provides no compatibility handling. See
+  `docs/generated-project.md` for the migration.
+
+### Changed
+
+- The generated glossary now lives at `docs/glossary.md`, and it renders its
+  Official Name from the selected Design System.
+- The documentation was refreshed for clearer wording and current behavior,
+  including the README, the ADRs, and the generated-project templates.
+- The website homepage and README lead with a plain-language summary for
+  non-engineers.
+- The website adds feedback motion and evidence replays. The arrival underline
+  now matches the heading text width, and two-column tops align to the title
+  cap line at the large breakpoint.
+
+## [0.1.1] - 2026-10-14
+
+### Fixed
+
+- Running `wda` with no arguments prints usage to stdout and exits with
+  status `0`. Earlier builds reported the executable path as an unknown
+  command and exited with status `2`.
+
+### Changed
+
+- The `website` page now presents the four steps
+  from one sentence to `dist/`, with a single top bar.
+
+## [0.1.0] - 2026-10-05
+
+The first WDA release provides a standalone CLI for creating and maintaining
+framework-independent Standard Web projects.
+
+### Added
+
+- Four CLI commands: `wda check`, `wda init`, `wda build`, and `wda deps`.
+  The `deps` command supports `add`, `remove`, and `update`.
+- `wda --version`, which reports the installed WDA version.
+- Two built-in Design System paths: WDA Minimal and Spectrum 2. The six
+  Spectrum 2 direct dependencies are resolved and pinned together when that
+  adapter is selected.
+- Build targets for six architectures and platforms: x86_64 Windows,
+  aarch64 Windows, x86_64 macOS, aarch64 macOS, x86_64 Linux musl, and
+  aarch64 Linux musl.
+- A build pipeline that requires `deno` on PATH and invokes
+  `npm:esbuild@0.25.5` through Deno. The binary's build logic pins `esbuild`,
+  which is not required as a separate PATH tool.
+- Project initialization that requires `git` on PATH, creates a local Git
+  repository, and records the initial project state.
+
+### Changed
+
+- `wda check` reports named toolchain warnings when Git or Deno is missing or
+  cannot start. `wda init` keeps the WDA Minimal fallback when Deno is absent.
+- The release pipeline publishes a curated public snapshot with checksums,
+  cosign signatures, installer scripts, and six platform targets.
+
+### Format
+
+- `wdaVersion` `0.1.0` is the **Current format**. No legacy project format is
+  implemented in this release.
+
+### Known limitations
+
+- When `wda` is not on PATH, `skills/wda/references/install.md` routes the AI
+  to `docs/install.md`, but `docs/install.md` does not yet exist. The Skill
+  must stop and report this gap rather than invent installation steps.
