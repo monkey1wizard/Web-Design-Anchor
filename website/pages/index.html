@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script>
+    (function () {
+      var root = document.documentElement;
+      root.setAttribute("data-js", "");
+      var languageKey = "wda-website-language";
+      document.addEventListener("click", function (event) {
+        var target = event.target;
+        var link = target && target.closest ? target.closest(".lang-switch__item[hreflang]") : null;
+        if (!link) return;
+        var selectedLanguage = link.getAttribute("hreflang");
+        if (selectedLanguage !== "en-US" && selectedLanguage !== "zh-TW" && selectedLanguage !== "ja") return;
+        try {
+          localStorage.setItem(languageKey, selectedLanguage);
+        } catch (error) {}
+      }, true);
+      var language = null;
+      try {
+        language = localStorage.getItem(languageKey);
+      } catch (error) {}
+      if (language !== "en-US" && language !== "zh-TW" && language !== "ja") {
+        language = null;
+      }
+      if (!language) {
+        var preferredLanguages = navigator.languages && navigator.languages.length > 0
+          ? navigator.languages
+          : [navigator.language];
+        for (var index = 0; index < preferredLanguages.length; index += 1) {
+          var candidate = String(preferredLanguages[index]).toLowerCase();
+          if (candidate === "en" || candidate.indexOf("en-") === 0) {
+            language = "en-US";
+            break;
+          }
+          if (candidate === "ja" || candidate.indexOf("ja-") === 0) {
+            language = "ja";
+            break;
+          }
+          if (candidate === "zh-tw" || candidate === "zh-hant" || candidate.indexOf("zh-hant-") === 0) {
+            language = "zh-TW";
+            break;
+          }
+        }
+        language = language || "en-US";
+        try {
+          localStorage.setItem(languageKey, language);
+        } catch (error) {}
+      }
+      if (language === "ja") {
+        window.location.replace("ja.html" + window.location.search + window.location.hash);
+        return;
+      }
+      if (language === "zh-TW") {
+        window.location.replace("zh-TW.html" + window.location.search + window.location.hash);
+        return;
+      }
+      try {
+        var mode = localStorage.getItem("wda-website-color-mode");
+        if (mode === "light" || mode === "dark") root.setAttribute("data-theme", mode);
+      } catch (error) {}
+    })();
+  </script>
+  <title>Web Design Anchor | Build websites with AI</title>
+  <meta name="description" content="Build websites with AI and keep design decisions in your project. WDA works with an AI coding tool that can run commands on your computer, such as Claude Code or Codex. Git is optional. WDA Minimal needs no Deno, Node.js, or Bun.">
+  <link rel="canonical" href="https://monkey1wizard.github.io/Web-Design-Anchor/">
+  <link rel="alternate" hreflang="zh-TW" href="https://monkey1wizard.github.io/Web-Design-Anchor/zh-TW.html">
+  <link rel="alternate" hreflang="en-US" href="https://monkey1wizard.github.io/Web-Design-Anchor/">
+  <link rel="alternate" hreflang="ja" href="https://monkey1wizard.github.io/Web-Design-Anchor/ja.html">
+  <link rel="alternate" hreflang="x-default" href="https://monkey1wizard.github.io/Web-Design-Anchor/">
+  <link rel="stylesheet" href="styles/tokens.css">
+  <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+  <header class="top-bar">
+    <div class="container top-bar__inner">
+      <details class="lang-switch">
+        <summary class="utility-button utility-button--icon" aria-label="Language: English">
+          <svg class="utility-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="7.25"/><ellipse cx="10" cy="10" rx="3" ry="7.25"/><path d="M2.75 10h14.5M4.2 6.25c3.4 1.3 7.2 1.3 11.6 0M4.2 13.75c3.4-1.3 7.2-1.3 11.6 0"/></svg>
+          <span class="visually-hidden">Language: English</span>
+        </summary>
+        <ul class="lang-switch__menu">
+          <li><a class="lang-switch__item" href="index.html" hreflang="en-US" lang="en-US" aria-current="page"><span>English</span><svg class="utility-icon lang-switch__check" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></svg></a></li>
+          <li><a class="lang-switch__item" href="ja.html" hreflang="ja" lang="ja"><span>日本語</span><svg class="utility-icon lang-switch__check" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></svg></a></li>
+          <li><a class="lang-switch__item" href="zh-TW.html" hreflang="zh-TW" lang="zh-TW"><span>繁體中文</span><svg class="utility-icon lang-switch__check" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></svg></a></li>
+        </ul>
+      </details>
+      <fieldset class="color-mode">
+        <legend class="visually-hidden">Color mode</legend>
+        <label class="color-mode__option">
+          <input class="visually-hidden" type="radio" name="color-mode" value="light">
+          <svg class="utility-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><circle cx="10" cy="10" r="3.25"/><path d="M10 2.5v1.75M10 15.75v1.75M2.5 10h1.75M15.75 10h1.75M4.7 4.7l1.24 1.24M14.06 14.06l1.24 1.24M4.7 15.3l1.24-1.24M14.06 5.94l1.24-1.24"/></svg>
+          <span class="visually-hidden">Light mode</span>
+          <span class="color-mode__tip" aria-hidden="true">Light</span>
+        </label>
+        <label class="color-mode__option">
+          <input class="visually-hidden" type="radio" name="color-mode" value="dark">
+          <svg class="utility-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M16.5 12.2A6.75 6.75 0 0 1 7.8 3.5a6.75 6.75 0 1 0 8.7 8.7z"/></svg>
+          <span class="visually-hidden">Dark mode</span>
+          <span class="color-mode__tip" aria-hidden="true">Dark</span>
+        </label>
+        <label class="color-mode__option">
+          <input class="visually-hidden" type="radio" name="color-mode" value="system" checked>
+          <svg class="utility-icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="2.75" y="3.75" width="14.5" height="10" rx="1.5"/><path d="M7 17.25h6M10 13.75v3.5"/></svg>
+          <span class="visually-hidden">Use system setting</span>
+          <span class="color-mode__tip" aria-hidden="true">System</span>
+        </label>
+      </fieldset>
+      <a class="utility-button utility-button--icon" href="https://github.com/monkey1wizard/Web-Design-Anchor">
+        <svg class="utility-icon utility-icon--solid" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"/></svg>
+        <span class="visually-hidden">WDA source code on GitHub</span>
+      </a>
+    </div>
+  </header>
+
+  <sp-theme system="spectrum-two" scale="medium">
+    <script>
+      (function () {
+        var theme = document.currentScript.parentElement;
+        try {
+          var mode = document.documentElement.getAttribute("data-theme");
+          if (mode !== "light" && mode !== "dark") {
+            mode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+          }
+          theme.setAttribute("color", mode);
+        } catch (error) {
+          theme.setAttribute("color", "light");
+        }
+      })();
+    </script>
+    <main id="top">
+      <section class="hero" aria-labelledby="hero-title">
+        <div class="container hero__inner">
+          <div class="hero__text">
+            <h1 class="hero__title" id="hero-title">Web Design Anchor</h1>
+            <p class="hero__sub">Build websites with AI. Keep design decisions in your project.</p>
+          </div>
+          <nav class="toc" aria-label="Five questions answered on this page">
+            <ol>
+              <li><a href="#no-code"><svg class="toc__icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M8 5l5 5-5 5"/></svg>Can I use it without coding?</a></li>
+              <li><a href="#files"><svg class="toc__icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M8 5l5 5-5 5"/></svg>What is in the project?</a></li>
+              <li><a href="#dist"><svg class="toc__icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M8 5l5 5-5 5"/></svg>What does wda build create?</a></li>
+              <li><a href="#no-lock-in"><svg class="toc__icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M8 5l5 5-5 5"/></svg>Will the site still work without WDA?</a></li>
+              <li><a href="#install"><svg class="toc__icon" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M8 5l5 5-5 5"/></svg>How do I get started?</a></li>
+            </ol>
+          </nav>
+        </div>
+      </section>
+
+      <section class="q" id="no-code" aria-labelledby="no-code-title">
+        <div class="container q__split">
+          <div class="q__head">
+            <h2 class="q__title" id="no-code-title">Can I use it without coding?</h2>
+            <p class="q__answer">Yes, if you use an AI coding tool that can run commands on your computer, such as Claude Code or Codex. Git is optional. WDA Minimal needs no Deno, Node.js, or Bun. You don't need to write the code yourself.</p>
+            <p class="q__answer">The project keeps pages, styles, and design rules in clear locations. You can edit content and adjust colors, type, and other design choices in one place.</p>
+          </div>
+          <ol class="chat" aria-label="Example conversation">
+            <li class="chat__turn">
+              <p class="chat__who">Designer, example</p>
+              <p class="chat__say chat__say--you">Make the heading larger and keep it readable in dark mode.</p>
+            </li>
+            <li class="chat__turn">
+              <p class="chat__who">AI, example</p>
+              <p class="chat__say">I read docs/design.md, updated styles/main.css and tokens/tokens.json, then ran wda build successfully.</p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <section class="q" id="files" aria-labelledby="files-title">
+        <div class="container q__split">
+          <div class="q__head">
+            <h2 class="q__title" id="files-title">What is in the project?</h2>
+            <p class="q__answer">The project folder contains the files you and your AI coding tool use to maintain the site: pages, styles, design tokens, code, and project documentation.</p>
+            <p class="q__answer">Design is maintained through documentation. docs/design.md records the project's design system, accessibility baseline, visual review criteria, and direction. The AI can use it to assess the page and write lasting decisions back to the file, so design rules stay with the project instead of getting lost in chat history. You still review the page yourself.</p>
+          </div>
+          <ul class="dtree" aria-label="Development folder structure">
+            <li class="dtree__item">
+              <span class="dtree__row"><svg class="ficon ficon--folder" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2.5 5.5a1.5 1.5 0 0 1 1.5-1.5h3.6l1.8 2h6.6a1.5 1.5 0 0 1 1.5 1.5v7.5a1.5 1.5 0 0 1-1.5 1.5H4a1.5 1.5 0 0 1-1.5-1.5z"/></svg><span class="dtree__name">website/</span></span>
+              <ul>
+                <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--folder" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2.5 5.5a1.5 1.5 0 0 1 1.5-1.5h3.6l1.8 2h6.6a1.5 1.5 0 0 1 1.5 1.5v7.5a1.5 1.5 0 0 1-1.5 1.5H4a1.5 1.5 0 0 1-1.5-1.5z"/></svg><span class="dtree__name">pages/</span><span class="dtree__note">Page entry points</span></span>
+                  <ul>
+                    <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--html" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path class="ficon__mark" d="M8.5 10.5l-1.5 1.5 1.5 1.5M11.5 10.5l1.5 1.5-1.5 1.5"/></svg><span class="dtree__name">index.html</span></span></li>
+                    <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--html" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path class="ficon__mark" d="M8.5 10.5l-1.5 1.5 1.5 1.5M11.5 10.5l1.5 1.5-1.5 1.5"/></svg><span class="dtree__name">zh-TW.html</span></span></li>
+                    <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--html" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path class="ficon__mark" d="M8.5 10.5l-1.5 1.5 1.5 1.5M11.5 10.5l1.5 1.5-1.5 1.5"/></svg><span class="dtree__name">ja.html</span></span></li>
+                  </ul>
+                </li>
+                <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--folder" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2.5 5.5a1.5 1.5 0 0 1 1.5-1.5h3.6l1.8 2h6.6a1.5 1.5 0 0 1 1.5 1.5v7.5a1.5 1.5 0 0 1-1.5 1.5H4a1.5 1.5 0 0 1-1.5-1.5z"/></svg><span class="dtree__name">styles/</span><span class="dtree__note">Stylesheets</span></span></li>
+                <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--folder" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2.5 5.5a1.5 1.5 0 0 1 1.5-1.5h3.6l1.8 2h6.6a1.5 1.5 0 0 1 1.5 1.5v7.5a1.5 1.5 0 0 1-1.5 1.5H4a1.5 1.5 0 0 1-1.5-1.5z"/></svg><span class="dtree__name">tokens/</span><span class="dtree__note">Design tokens: colors, type sizes, spacing, and other design values</span></span></li>
+                <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--folder" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2.5 5.5a1.5 1.5 0 0 1 1.5-1.5h3.6l1.8 2h6.6a1.5 1.5 0 0 1 1.5 1.5v7.5a1.5 1.5 0 0 1-1.5 1.5H4a1.5 1.5 0 0 1-1.5-1.5z"/></svg><span class="dtree__name">scripts/</span><span class="dtree__note">TypeScript code</span></span></li>
+                <li class="dtree__item">
+                  <span class="dtree__row"><svg class="ficon ficon--folder" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2.5 5.5a1.5 1.5 0 0 1 1.5-1.5h3.6l1.8 2h6.6a1.5 1.5 0 0 1 1.5 1.5v7.5a1.5 1.5 0 0 1-1.5 1.5H4a1.5 1.5 0 0 1-1.5-1.5z"/></svg><span class="dtree__name">docs/</span><span class="dtree__note">Project documentation</span></span>
+                  <ul>
+                    <li class="dtree__item dtree__item--key"><span class="dtree__row"><svg class="ficon ficon--file" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/></svg><span class="dtree__name">design.md</span><span class="dtree__note">Design rules the AI uses to assess the page</span></span></li>
+                  </ul>
+                </li>
+                <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--file" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/></svg><span class="dtree__name">anchor.json</span><span class="dtree__note">Project name, technical baselines, design system, and WDA version</span></span></li>
+                <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--file" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/></svg><span class="dtree__name">package.json</span><span class="dtree__note">npm packages the build uses</span></span></li>
+                <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--file" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/></svg><span class="dtree__name">README.md</span><span class="dtree__note">Project overview</span></span></li>
+                <li class="dtree__item dtree__item--deploy"><span class="dtree__row"><svg class="ficon ficon--folder" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2.5 5.5a1.5 1.5 0 0 1 1.5-1.5h3.6l1.8 2h6.6a1.5 1.5 0 0 1 1.5 1.5v7.5a1.5 1.5 0 0 1-1.5 1.5H4a1.5 1.5 0 0 1-1.5-1.5z"/></svg><span class="dtree__name">dist/</span><span class="dtree__note">Created by wda build for deployment</span></span></li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="q" id="dist" aria-labelledby="dist-title">
+        <div class="container q__split">
+          <div class="q__head">
+            <h2 class="q__title" id="dist-title">What does wda build create?</h2>
+            <p class="q__answer">The AI usually runs the WDA build command after it updates files. You can also run it yourself. The command checks the project first and stops on errors without changing dist/. It creates dist/ only after the checks pass.</p>
+            <p class="q__answer">dist/ is for deployment. Each run of wda build recreates the entire folder, so do not edit it by hand.</p>
+          </div>
+          <ul class="dtree" aria-label="Files and sizes in dist/" data-replay>
+            <li class="dtree__item">
+              <span class="dtree__row"><svg class="ficon ficon--folder" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2.5 5.5a1.5 1.5 0 0 1 1.5-1.5h3.6l1.8 2h6.6a1.5 1.5 0 0 1 1.5 1.5v7.5a1.5 1.5 0 0 1-1.5 1.5H4a1.5 1.5 0 0 1-1.5-1.5z"/></svg><span class="dtree__name">dist/</span></span>
+              <ul>
+                <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--html" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path class="ficon__mark" d="M8.5 10.5l-1.5 1.5 1.5 1.5M11.5 10.5l1.5 1.5-1.5 1.5"/></svg><span class="dtree__name">index.html</span><span class="dtree__size">28 KiB</span></span></li>
+                <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--html" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path class="ficon__mark" d="M8.5 10.5l-1.5 1.5 1.5 1.5M11.5 10.5l1.5 1.5-1.5 1.5"/></svg><span class="dtree__name">zh-TW.html</span><span class="dtree__size">27 KiB</span></span></li>
+                <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--html" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path class="ficon__mark" d="M8.5 10.5l-1.5 1.5 1.5 1.5M11.5 10.5l1.5 1.5-1.5 1.5"/></svg><span class="dtree__name">ja.html</span><span class="dtree__size">28 KiB</span></span></li>
+                <li class="dtree__item">
+                  <span class="dtree__row"><svg class="ficon ficon--folder" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2.5 5.5a1.5 1.5 0 0 1 1.5-1.5h3.6l1.8 2h6.6a1.5 1.5 0 0 1 1.5 1.5v7.5a1.5 1.5 0 0 1-1.5 1.5H4a1.5 1.5 0 0 1-1.5-1.5z"/></svg><span class="dtree__name">styles/</span></span>
+                  <ul>
+                    <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--css" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path class="ficon__mark" d="M9 10.5l-1.5 1.5L9 13.5M11 10.5l1.5 1.5-1.5 1.5"/></svg><span class="dtree__name">main.css</span><span class="dtree__size">24 KiB</span></span></li>
+                    <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--css" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path class="ficon__mark" d="M9 10.5l-1.5 1.5L9 13.5M11 10.5l1.5 1.5-1.5 1.5"/></svg><span class="dtree__name">tokens.css</span><span class="dtree__size">2 KiB</span></span></li>
+                  </ul>
+                </li>
+                <li class="dtree__item">
+                  <span class="dtree__row"><svg class="ficon ficon--folder" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M2.5 5.5a1.5 1.5 0 0 1 1.5-1.5h3.6l1.8 2h6.6a1.5 1.5 0 0 1 1.5 1.5v7.5a1.5 1.5 0 0 1-1.5 1.5H4a1.5 1.5 0 0 1-1.5-1.5z"/></svg><span class="dtree__name">scripts/</span></span>
+                  <ul>
+                    <li class="dtree__item"><span class="dtree__row"><svg class="ficon ficon--js" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M5 2.5h7l3.5 3.5v11.5H5z"/><path class="ficon__mark" d="M8.5 10.5l-1.5 1.5 1.5 1.5M11.5 10.5l1.5 1.5-1.5 1.5"/></svg><span class="dtree__name">main.js</span><span class="dtree__size">411 KiB</span></span></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="q" id="no-lock-in" aria-labelledby="no-lock-in-title">
+        <div class="container q__split">
+          <div class="q__head">
+            <h2 class="q__title" id="no-lock-in-title">Will the site still work without WDA?</h2>
+            <p class="q__answer">Yes. WDA is used to create and build the project, but the site does not need it to run. The files in dist/ work on any static host.</p>
+          </div>
+          <pre class="term" aria-label="Output from wda build" data-replay><span class="term__line term__line--cmd">$ wda build</span><span class="term__line">Build succeeded.</span><span class="term__line">Output: &lt;project&gt;/dist</span><span class="term__line term__dim">HTTP server required; opening via file:// will not work.</span></pre>
+        </div>
+      </section>
+
+      <section class="q q--install" id="install" aria-labelledby="install-title">
+        <div class="container">
+          <div class="q__head">
+            <h2 class="q__title" id="install-title">How do I get started?</h2>
+            <p class="q__answer">Git is optional. WDA Minimal needs no Deno, Node.js, or Bun. The default Spectrum and Lit packages use an existing package manager, npm or Bun. Then choose an installation method.</p>
+          </div>
+          <div class="routes__group">
+            <h3 class="routes__os">macOS and Linux</h3>
+            <dl class="routes">
+              <div class="routes__row"><dt>Homebrew</dt><dd class="routes__cmd"><div class="cmd"><code class="cmd__text">brew install monkey1wizard/tap/wda</code><button class="cmd__copy" type="button"><svg class="cmd__icon cmd__icon--copy" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="7" y="7" width="9.5" height="9.5" rx="2"/><path d="M13 4.5V4.5A1.5 1.5 0 0 0 11.5 3H5A2 2 0 0 0 3 5v6.5A1.5 1.5 0 0 0 4.5 13"/></svg><svg class="cmd__icon cmd__icon--done" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></svg><span class="visually-hidden">Copy the Homebrew command</span></button></div></dd></div>
+              <div class="routes__row"><dt>Run in a terminal</dt><dd class="routes__cmd"><div class="cmd"><code class="cmd__text">curl -fsSL https://raw.githubusercontent.com/monkey1wizard/web-design-anchor/main/packaging/install.sh | bash</code><button class="cmd__copy" type="button"><svg class="cmd__icon cmd__icon--copy" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="7" y="7" width="9.5" height="9.5" rx="2"/><path d="M13 4.5V4.5A1.5 1.5 0 0 0 11.5 3H5A2 2 0 0 0 3 5v6.5A1.5 1.5 0 0 0 4.5 13"/></svg><svg class="cmd__icon cmd__icon--done" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></svg><span class="visually-hidden">Copy the macOS and Linux installer command</span></button></div></dd></div>
+            </dl>
+          </div>
+          <div class="routes__group">
+            <h3 class="routes__os">Windows</h3>
+            <dl class="routes">
+              <div class="routes__row"><dt>Run in PowerShell</dt><dd class="routes__cmd"><div class="cmd"><code class="cmd__text">irm https://raw.githubusercontent.com/monkey1wizard/web-design-anchor/main/packaging/install.ps1 | iex</code><button class="cmd__copy" type="button"><svg class="cmd__icon cmd__icon--copy" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="7" y="7" width="9.5" height="9.5" rx="2"/><path d="M13 4.5V4.5A1.5 1.5 0 0 0 11.5 3H5A2 2 0 0 0 3 5v6.5A1.5 1.5 0 0 0 4.5 13"/></svg><svg class="cmd__icon cmd__icon--done" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></svg><span class="visually-hidden">Copy the Windows installer command</span></button></div></dd></div>
+              <div class="routes__row routes__row--pending"><dt>WinGet <span class="routes__status">In progress</span></dt><dd class="routes__cmd"><div class="cmd cmd--pending"><code class="cmd__text">winget install Monkey1Wizard.WDA</code></div></dd></div>
+            </dl>
+          </div>
+          <div class="routes__group">
+            <h3 class="routes__os">If Rust is installed</h3>
+            <dl class="routes">
+              <div class="routes__row"><dt>Cargo</dt><dd class="routes__cmd"><div class="cmd"><code class="cmd__text">cargo install --git https://github.com/monkey1wizard/Web-Design-Anchor --locked</code><button class="cmd__copy" type="button"><svg class="cmd__icon cmd__icon--copy" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="7" y="7" width="9.5" height="9.5" rx="2"/><path d="M13 4.5V4.5A1.5 1.5 0 0 0 11.5 3H5A2 2 0 0 0 3 5v6.5A1.5 1.5 0 0 0 4.5 13"/></svg><svg class="cmd__icon cmd__icon--done" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></svg><span class="visually-hidden">Copy the Cargo command</span></button></div></dd></div>
+            </dl>
+          </div>
+          <div class="routes__group">
+            <h3 class="routes__os">After installation</h3>
+            <dl class="routes">
+              <div class="routes__row"><dt>Check the version</dt><dd class="routes__cmd"><div class="cmd"><code class="cmd__text">wda --version</code><button class="cmd__copy" type="button"><svg class="cmd__icon cmd__icon--copy" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="7" y="7" width="9.5" height="9.5" rx="2"/><path d="M13 4.5V4.5A1.5 1.5 0 0 0 11.5 3H5A2 2 0 0 0 3 5v6.5A1.5 1.5 0 0 0 4.5 13"/></svg><svg class="cmd__icon cmd__icon--done" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></svg><span class="visually-hidden">Copy the version check command</span></button></div></dd></div>
+              <div class="routes__row"><dt>Create a project</dt><dd class="routes__cmd"><div class="cmd"><code class="cmd__text">wda init</code><button class="cmd__copy" type="button"><svg class="cmd__icon cmd__icon--copy" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><rect x="7" y="7" width="9.5" height="9.5" rx="2"/><path d="M13 4.5V4.5A1.5 1.5 0 0 0 11.5 3H5A2 2 0 0 0 3 5v6.5A1.5 1.5 0 0 0 4.5 13"/></svg><svg class="cmd__icon cmd__icon--done" viewBox="0 0 20 20" aria-hidden="true" focusable="false"><path d="M4.5 10.5l3.5 3.5 7.5-8"/></svg><span class="visually-hidden">Copy the project creation command</span></button></div></dd></div>
+            </dl>
+          </div>
+          <p class="routes__note">To start a new project, run <code>wda init</code> in an empty target folder. It creates the standard project structure and configuration for you to develop with an AI coding tool.</p>
+          <p class="routes__note">The two installers download the latest stable release from <a href="https://github.com/monkey1wizard/Web-Design-Anchor/releases">GitHub Releases</a> and verify its SHA-256 checksum. You can also download a release manually.</p>
+          <p class="visually-hidden" id="copy-status" role="status" data-success="Copied" data-failure="Could not copy automatically. The command is selected for you to copy manually."></p>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container site-footer__inner">
+        <div class="site-footer__brand">
+          <p class="site-footer__name">Web Design Anchor</p>
+          <p class="site-footer__text">This page was built with WDA and Spectrum 2. Spectrum design token values come from Adobe Spectrum, modified by this project, and are used under the Apache-2.0 license.</p>
+          <p class="site-footer__text">The page design was created with help from the <a href="https://impeccable.style/">Impeccable</a> skill.</p>
+        </div>
+        <ul class="site-footer__links">
+          <li><a href="https://github.com/monkey1wizard/Web-Design-Anchor">Source code</a></li>
+          <li><a href="https://github.com/monkey1wizard/Web-Design-Anchor/blob/main/LICENSE">License (Apache-2.0)</a></li>
+          <li><a href="https://github.com/monkey1wizard/Web-Design-Anchor/blob/main/SECURITY.md">Security</a></li>
+        </ul>
+      </div>
+    </footer>
+  </sp-theme>
+
+  <script type="module" src="scripts/main.ts"></script>
+</body>
+</html>

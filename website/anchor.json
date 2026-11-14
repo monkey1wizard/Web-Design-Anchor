@@ -1,0 +1,12 @@
+{
+  "projectName": "Web Design Anchor Website",
+  "projectVersion": "2026-10-09T23:42:13+08:00",
+  "wdaVersion": "0.2.0",
+  "pageArchitecture": "mpa",
+  "browserBaseline": "baseline-widely-available",
+  "accessibilityBaseline": "wcag-2.2-aa",
+  "designSystem": {
+    "name": "Spectrum 2",
+    "version": "1.12.4"
+  }
+}

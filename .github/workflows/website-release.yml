@@ -1,0 +1,83 @@
+name: Website Release
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Build and Deploy Website
+    if: ${{ github.repository == 'monkey1wizard/Web-Design-Anchor' && github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Set up Node.js for the website package manager
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Verify tools
+        run: |
+          cargo --version
+          node --version
+          npm --version
+          git --version
+
+      - name: Build WDA CLI
+        run: cargo build --release -p wda --locked
+
+      - name: Install website packages from the committed lockfile
+        shell: bash
+        run: |
+          cd website
+          npm ci --ignore-scripts
+
+      - name: Restore WDA TypeScript tool cache
+        shell: bash
+        run: |
+          cd website
+          ../target/release/wda tools fetch
+
+      - name: Build website static dist
+        shell: bash
+        run: |
+          cd website
+          sha256sum package.json package-lock.json > "$RUNNER_TEMP/website-manifests.sha256"
+          ../target/release/wda build
+          sha256sum --check "$RUNNER_TEMP/website-manifests.sha256"
+          test -f dist/index.html
+          test -f dist/zh-TW.html
+          test -f dist/ja.html
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: website/dist
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

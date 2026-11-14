@@ -1,0 +1,113 @@
+name: Compatibility watch
+
+on:
+  schedule:
+    - cron: '17 4 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    name: probe (${{ matrix.os }}, ${{ matrix.manager }})
+    if: ${{ github.repository == 'monkey1wizard/Web-Design-Anchor' }}
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        manager: [npm, bun]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: oven-sh/setup-bun@v2
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Read toolchain and run probes
+        shell: bash
+        env:
+          MANAGER: ${{ matrix.manager }}
+          ROW_OS: ${{ matrix.os }}
+          COMMIT: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          python -c 'import json,os; d=json.load(open("packaging/toolchain.json", encoding="utf-8")); assert os.environ["MANAGER"] in d["package_managers"]; print("tool:", d["name"], d["version"])' | tee -a "$GITHUB_STEP_SUMMARY"
+          printf 'Commit: %s\nPlatform: %s x86_64\nManager: %s ' "$COMMIT" "$ROW_OS" "$MANAGER" | tee -a "$GITHUB_STEP_SUMMARY"
+          "$MANAGER" --version | tee -a "$GITHUB_STEP_SUMMARY"
+          cargo run --locked -- --version | tee -a "$GITHUB_STEP_SUMMARY"
+          cargo tree --locked -i rolldown | head -n 1 | tee -a "$GITHUB_STEP_SUMMARY"
+          cargo run --locked -- tools fetch
+          for suite in build init; do
+            if [ "$suite" = build ]; then name="compat_external_probes_real_${MANAGER}"; else name="compat_external_init_real_${MANAGER}"; fi
+            cargo test --locked --test "$suite" "$name" -- --ignored --exact --nocapture 2>&1 | tee "${suite}-result.txt"
+            grep -Eq 'test result: ok\. 1 passed; 0 failed;' "${suite}-result.txt"
+          done
+      - name: Summarize cell result
+        if: always()
+        shell: bash
+        env:
+          ROW_OS: ${{ matrix.os }}
+          MANAGER: ${{ matrix.manager }}
+          STATUS: ${{ job.status }}
+        run: |
+          printf 'Cell: %s x86_64 / %s — %s\n' "$ROW_OS" "$MANAGER" "$STATUS" >> "$GITHUB_STEP_SUMMARY"
+
+  report:
+    needs: [probe]
+    if: ${{ always() && github.repository == 'monkey1wizard/Web-Design-Anchor' }}
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      issues: write
+    concurrency:
+      group: compat-watch-issue
+      cancel-in-progress: false
+    steps:
+      - name: Summarize results and update tracking issue
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RUN_ID: ${{ github.run_id }}
+          RUN_ATTEMPT: ${{ github.run_attempt }}
+          SERVER_URL: ${{ github.server_url }}
+          COMMIT: ${{ github.sha }}
+          PROBE_RESULT: ${{ needs.probe.result }}
+        run: |
+          set -euo pipefail
+          REPO='monkey1wizard/Web-Design-Anchor'
+          RUN_URL="$SERVER_URL/$REPO/actions/runs/$RUN_ID/attempts/$RUN_ATTEMPT"
+          jobs=$(gh api --paginate --slurp "repos/$REPO/actions/runs/$RUN_ID/attempts/$RUN_ATTEMPT/jobs?per_page=100")
+          summary="Run: $RUN_URL
+          Commit: $COMMIT
+          Probe result: $PROBE_RESULT"
+          incomplete=0
+          for os in ubuntu-latest windows-latest; do
+            for manager in npm bun; do
+              name="probe ($os, $manager)"
+              result=$(printf '%s' "$jobs" | jq -r --arg name "$name" '[.[].jobs[] | select(.name == $name) | .conclusion] | if length == 1 and (.[0] == "success" or .[0] == "failure" or .[0] == "cancelled" or .[0] == "skipped") then .[0] else "missing or incomplete" end')
+              if [ "$result" != success ]; then incomplete=1; fi
+              summary="$summary
+          $name: $result"
+            done
+          done
+          printf '%s\n' "$summary" >> "$GITHUB_STEP_SUMMARY"
+          if [ "$PROBE_RESULT" = failure ]; then
+            issue=$(gh issue list --repo monkey1wizard/Web-Design-Anchor --state open --search '<!-- wda-compat-watch --> in:body' --json number --jq '.[0].number // empty')
+            body="<!-- wda-compat-watch -->
+
+          $summary"
+            if [ -z "$issue" ]; then
+              url=$(gh issue create --repo "$REPO" --title 'Compatibility watch failures' --body "$body")
+            else
+              gh issue comment "$issue" --repo "$REPO" --body "$body"
+              url="$SERVER_URL/$REPO/issues/$issue"
+            fi
+            printf '\nTracking issue: %s\n' "$url" >> "$GITHUB_STEP_SUMMARY"
+          fi
+          if [ "$incomplete" -ne 0 ]; then exit 1; fi

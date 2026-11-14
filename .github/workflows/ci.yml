@@ -1,0 +1,271 @@
+name: CI
+
+# The private source repository does not run CI on push. Release checks run
+# locally before publication, and the public release workflow calls this file
+# before signing. Pull requests and manual dispatch still run everywhere.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      scope:
+        description: "full runs every job; tests-only runs only the cargo test matrix"
+        type: choice
+        options:
+          - full
+          - tests-only
+        default: full
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: cargo test
+    if: ${{ github.event_name != 'push' || github.repository == 'monkey1wizard/Web-Design-Anchor' }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Set up Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Verify Deno
+        run: deno --version
+      - name: Verify Git
+        run: git --version
+      - name: Configure git identity
+        run: |
+          git config --global user.name "WDA CI"
+          git config --global user.email "wda-ci@localhost"
+      - name: Restore TypeScript tool cache
+        run: cargo run --locked -- tools fetch
+      - name: Run cargo test
+        run: cargo test --locked --no-fail-fast
+
+  ignored-probes:
+    name: cargo test -- --ignored
+    if: ${{ inputs.scope != 'tests-only' && (github.event_name != 'push' || github.repository == 'monkey1wizard/Web-Design-Anchor') }}
+    runs-on: ${{ matrix.os }}
+    continue-on-error: true
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - name: Set up Deno
+        uses: denoland/setup-deno@v2
+        with:
+          deno-version: v2.x
+      - name: Verify Deno
+        run: deno --version
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+      - name: Restore TypeScript tool cache
+        run: cargo run --locked -- tools fetch
+      - name: Run cargo test -- --ignored
+        run: cargo test -- --ignored
+
+  # Six-platform native smoke. Each row builds the release tool with its own
+  # embedded TypeScript package, launches it, and builds a Minimal and an
+  # installed Spectrum project. It builds and runs only: no signing, tags,
+  # releases, publishing, or tokens are used here.
+  native-smoke:
+    name: native smoke ${{ matrix.ts_platform }}
+    if: ${{ inputs.scope != 'tests-only' && (github.event_name != 'push' || github.repository == 'monkey1wizard/Web-Design-Anchor') }}
+    runs-on: ${{ matrix.os }}
+    permissions:
+      contents: read
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - ts_platform: win32-x64
+            os: windows-latest
+            arch: x64
+            exe: ".exe"
+            alpine: "false"
+          - ts_platform: win32-arm64
+            os: windows-11-arm
+            arch: arm64
+            exe: ".exe"
+            alpine: "false"
+          - ts_platform: darwin-x64
+            os: macos-15-intel
+            arch: x64
+            exe: ""
+            alpine: "false"
+          - ts_platform: darwin-arm64
+            os: macos-latest
+            arch: arm64
+            exe: ""
+            alpine: "false"
+          - ts_platform: linux-x64
+            os: ubuntu-latest
+            arch: x64
+            exe: ""
+            alpine: "true"
+          - ts_platform: linux-arm64
+            os: ubuntu-24.04-arm
+            arch: arm64
+            exe: ""
+            alpine: "true"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Rust
+        if: matrix.alpine != 'true'
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Set up Node.js
+        if: matrix.alpine != 'true'
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Fetch and verify the platform TypeScript package
+        shell: bash
+        env:
+          TS_PLATFORM: ${{ matrix.ts_platform }}
+        run: |
+          set -euo pipefail
+          FILE="typescript-${TS_PLATFORM}-7.0.2.tgz"
+          mkdir -p target/ts-embed
+          curl --fail --silent --show-error --location --proto '=https' --tlsv1.2 --max-time 120 \
+            -o "target/ts-embed/${FILE}" \
+            "https://registry.npmjs.org/@typescript/typescript-${TS_PLATFORM}/-/${FILE}"
+          EXPECTED="$(grep -o "\"platform\":\"${TS_PLATFORM}\"[^}]*" packaging/toolchain.json | grep -o 'sha512-[A-Za-z0-9+/=]*')"
+          ACTUAL="sha512-$(openssl dgst -sha512 -binary "target/ts-embed/${FILE}" | openssl base64 -A)"
+          if [ -z "$EXPECTED" ] || [ "$ACTUAL" != "$EXPECTED" ]; then
+            echo "TypeScript package integrity mismatch for ${TS_PLATFORM}" >&2
+            exit 1
+          fi
+          echo "verified ${FILE} ${ACTUAL}"
+
+      - name: Run native smoke
+        shell: bash
+        env:
+          TS_PLATFORM: ${{ matrix.ts_platform }}
+          ROW_OS: ${{ matrix.os }}
+          ROW_ARCH: ${{ matrix.arch }}
+          ROW_EXE: ${{ matrix.exe }}
+          ROW_ALPINE: ${{ matrix.alpine }}
+        run: |
+          set -euo pipefail
+          mkdir -p target/native-smoke
+          cat > target/native-smoke/run.sh <<'SMOKE'
+          set -euo pipefail
+          EVIDENCE="$PWD/native-smoke-evidence/${TS_PLATFORM}.txt"
+          mkdir -p "$PWD/native-smoke-evidence"
+          : > "$EVIDENCE"
+          say() { echo "$*" | tee -a "$EVIDENCE"; }
+          trap 'rc=$?; if [ "$rc" -eq 0 ]; then say "result=pass"; else say "result=fail exit=$rc"; fi' EXIT
+          sha256_of() {
+            if command -v sha256sum >/dev/null 2>&1; then sha256sum "$1" | cut -d' ' -f1; else shasum -a 256 "$1" | cut -d' ' -f1; fi
+          }
+          ARCHIVE="$PWD/target/ts-embed/typescript-${TS_PLATFORM}-7.0.2.tgz"
+          WDA="$PWD/target/release/wda${ROW_EXE}"
+
+          say "os=${ROW_OS} arch=${ROW_ARCH} ts_platform=${TS_PLATFORM} alpine=${ROW_ALPINE}"
+          say "host=$(uname -sm)"
+          say "toolchain_sri=$(grep -o "\"platform\":\"${TS_PLATFORM}\"[^}]*" packaging/toolchain.json | grep -o 'sha512-[A-Za-z0-9+/=]*')"
+          say "archive_sha512=sha512-$(openssl dgst -sha512 -binary "$ARCHIVE" | openssl base64 -A)"
+          say "archive_sha256=$(sha256_of "$ARCHIVE")"
+
+          WDA_EMBEDDED_TS_ARCHIVE="$ARCHIVE" WDA_REQUIRE_EMBEDDED_TS=1 cargo build --release --locked -p wda
+          say "build_release=pass"
+          say "wda_version=$("$WDA" --version)"
+
+          TOOL="$("$WDA" tools fetch | sed -n 's/^Toolchain ready: //p')"
+          say "tools_fetch=pass"
+          TOOL_OUT="$("$TOOL" --version)"
+          say "tool_launch=$(printf '%s\n' "$TOOL_OUT" | head -n 1)"
+
+          EMPTY="$PWD/native-smoke-empty-path"
+          MINIMAL="$PWD/native-smoke-minimal"
+          rm -rf "$EMPTY" "$MINIMAL"
+          mkdir -p "$EMPTY" "$MINIMAL"
+          cd "$MINIMAL"
+          PATH="$EMPTY" "$WDA" init
+          say "minimal_init=pass"
+          say "minimal_package_json_sha256=$(sha256_of package.json)"
+          "$WDA" check
+          say "minimal_check=pass"
+          "$WDA" build
+          test -s dist/index.html
+          say "minimal_build=pass"
+
+          SPECTRUM="$PWD/../native-smoke-spectrum"
+          rm -rf "$SPECTRUM"
+          mkdir -p "$SPECTRUM"
+          cd "$SPECTRUM"
+          "$WDA" init
+          test -f node_modules/@spectrum-web-components/button/package.json
+          say "spectrum_init=pass"
+          say "npm_version=$(npm --version)"
+          say "spectrum_package=@spectrum-web-components/button present"
+          say "spectrum_lock_sha256=$(sha256_of package-lock.json)"
+          "$WDA" build
+          test -s dist/index.html
+          say "spectrum_build=pass"
+          say "network_cut=not-run"
+          SMOKE
+          if [ "$ROW_ALPINE" = "true" ]; then
+            docker run --rm -v "$PWD:/work" -w /work \
+              -e TS_PLATFORM -e ROW_OS -e ROW_ARCH -e ROW_EXE -e ROW_ALPINE \
+              alpine:3.21 sh -c 'apk add --no-cache bash build-base curl git nodejs npm openssl coreutils && curl --proto "=https" --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --profile minimal && . "$HOME/.cargo/env" && bash target/native-smoke/run.sh'
+          else
+            bash target/native-smoke/run.sh
+          fi
+
+      - name: Upload native smoke evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: native-smoke-${{ matrix.ts_platform }}
+          path: native-smoke-evidence/${{ matrix.ts_platform }}.txt
+          if-no-files-found: error
+
+  # Requires every platform row to report a passing smoke result.
+  native-smoke-gate:
+    name: native smoke six-row gate
+    needs: [native-smoke]
+    if: ${{ always() && inputs.scope != 'tests-only' && (github.event_name != 'push' || github.repository == 'monkey1wizard/Web-Design-Anchor') }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Download native smoke rows
+        uses: actions/download-artifact@v4
+        with:
+          pattern: native-smoke-*
+          path: native-smoke
+          merge-multiple: true
+
+      - name: Require six passing rows
+        shell: bash
+        run: |
+          status=0
+          for platform in win32-x64 win32-arm64 darwin-x64 darwin-arm64 linux-x64 linux-arm64; do
+            file="native-smoke/${platform}.txt"
+            if [ -f "$file" ] && grep -qx 'result=pass' "$file"; then
+              echo "row ${platform}: pass"
+            else
+              echo "missing or failing native smoke row: ${platform}" >&2
+              status=1
+            fi
+          done
+          exit "$status"

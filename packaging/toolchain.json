@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "package_managers": ["npm", "bun"],
+  "name": "typescript",
+  "version": "7.0.2",
+  "platforms": [
+    {"platform":"win32-x64","package":"@typescript/typescript-win32-x64","executable":"package/lib/tsc.exe","integrity":"sha512-0BQ3HkAHHlKLSp1qRvf3SUhGpGsDuhB/jgFw75guyqbxJqEaS0Cw/VFO8i2nHglJUzQCRtMMR/IBAKE3ETMC4g=="},
+    {"platform":"win32-arm64","package":"@typescript/typescript-win32-arm64","executable":"package/lib/tsc.exe","integrity":"sha512-Gyl1Vy6OsWesLzmq+EP0Fb7b4Nid5232AvcA2SFcdYreldpNtYFFofPjnt62y9hQy7VTaZp65ICJjuAQRaVcIQ=="},
+    {"platform":"darwin-x64","package":"@typescript/typescript-darwin-x64","executable":"package/lib/tsc","integrity":"sha512-SZ9xZInqApNlNGc9s0W1VSsktYSOe9cFqNOIqmN1Gs8SmkjKZYFt017G4VwPxASInODuAdbTW7sXiFUf893RgA=="},
+    {"platform":"darwin-arm64","package":"@typescript/typescript-darwin-arm64","executable":"package/lib/tsc","integrity":"sha512-gowzar9MwS/aRWp6f3a4KUqzRjAZjOsmGNCM6LcTgXum+dBfgsBVMN+AgvOCCbguXyick6LJhpBszxMebJ8syA=="},
+    {"platform":"linux-x64","package":"@typescript/typescript-linux-x64","executable":"package/lib/tsc","integrity":"sha512-EYdf2cNg7rgCWJnxCdJ+F3V39O8ihb37eHAu1LK8oAFizgTQbPOK7zHHXbPt8rX24COqODXeI3sIf0fCXG7H/A=="},
+    {"platform":"linux-arm64","package":"@typescript/typescript-linux-arm64","executable":"package/lib/tsc","integrity":"sha512-Qh4eU4/y3yDjnfjjyPYihMj5/ODIlmt+Bzu17OI+fiSRDW57QmU5SiN63exPRNJPKUzcc1INa1NXdrJ+MqHjUQ=="}
+  ]
+}

@@ -1,0 +1,5 @@
+version: 1
+rules:
+  # docs/i18n/ja/glossary.ja.md uses ユーザー as the canonical rendering.
+  - expected: ユーザー
+    pattern: ユーザ(?!ー)
